@@ -88,7 +88,7 @@ This will first check if the transient exsists. If it does, it returns the trans
 
 **Example Syntax of Transient_ReadyTheme_NavigationSet**
 ```xml
-<mvt:do file="g.Module_Root $ '/modules/util/transients.mvc'" name="l.settings:my_navigation_set" value="Set_Transient_ReadyTheme_NavigationSet( 'navigation_bar', 60*60*24)" />
+<mvt:do file="g.Module_Root $ '/modules/util/transients.mvc'" name="l.settings:my_navigation_set" value="Transient_ReadyTheme_NavigationSet( 'navigation_bar', 60*60*24)" />
 <mvt:if expr="l.settings:my_navigation_set">
 	&mvt:my_navigation_set;
 <mvt:else>

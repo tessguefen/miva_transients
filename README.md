@@ -69,7 +69,7 @@ This is an example of pulling a Blog's most recent posts, and displaying them on
 
 # Other Useful Functions with Examples
 
-In Version 1.0006 there are 4 new functions:
+In Version 1.006 there are 4 new functions:
 - Transient_ReadyTheme_NavigationSet( readytheme_code, expires )
 - Transient_Load_NavigationSet( readytheme_code )
 - Transient_ReadyTheme_Image( readytheme_code, expires )

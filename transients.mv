@@ -218,10 +218,11 @@
 <MvFUNCTION NAME = "Set_Transient" PARAMETERS = "key, value, expires" STANDARDOUTPUTLEVEL = "" ERROROUTPUTLEVEL = "">
 	<MvASSIGN NAME = "l.value" VALUE = "{ trim( l.value ) }">
 	<MvASSIGN NAME = "l.key" VALUE = "{ trim( l.key ) }">
+	<MvASSIGN NAME = "l.expires" VALUE = "{ trim( l.expires ) }">
 	
 	<MvASSIGN NAME = "l.transient" VALUE = "{ Get_Transient( l.key ) }">
 
-	<MvIF EXPR = "{ NOT l.value OR NOT l.key }">
+	<MvIF EXPR = "{ NOT l.value OR NOT l.key OR NOT l.expires }">
 		<MvFUNCTIONRETURN>
 	</MvIF>
 
@@ -357,7 +358,7 @@
 			</MvIF>
 		</MvIF>
 	</MvIF>
-	
+
 	<MvASSIGN NAME = "l.return" VALUE = "{ miva_array_serialize( l.image ) }">
 	<MvIF EXPR = "{ Set_Transient( l.key, l.return, l.expires )  }">
 		<MvFUNCTIONRETURN VALUE = "{ l.return }">

@@ -83,7 +83,7 @@ Transient_ReadyTheme_NavigationSet( readytheme_code, expires )
 **readytheme_code**: The ReadyTheme Navigation Set Code
 **expires**: Amount of seconds to save the transient
 
-This will first check if the transient exsists. The key is set to `navigationset__readytheme_code`. The return value is the rendered HTML data.
+This will first check if the transient exsists. If it does, it returns the transient. If it does not, it will set a transient with he key `navigationset__readytheme_code`, and save it. The return value is the rendered HTML data.
 
 **Example Syntax of Transient_ReadyTheme_NavigationSet**
 ```xml
@@ -122,7 +122,7 @@ Transient_ReadyTheme_Image( readytheme_code, expires )
 **readytheme_code**: The ReadyTheme Image Code
 **expires**: The amount of seconds to save the transient
 
-This will first check if the transient exsists. The key is set to `image__readytheme_code`. The return value is the serialized variable of the image. The variable contains the following:
+This will first check if the transient exsists. If it does, it returns the transient. If it does not, it will set a transient with he key `image__readytheme_code`, and save it The return value is the serialized variable of the image. The variable contains the following:
 `active, code, cropped_url, id, image_hght, image_id, image_size, image_wdth, link, link_dest, link_targ, link_type, link_url, name, url`
 
 **Example Syntax of Transient_ReadyTheme_Image**

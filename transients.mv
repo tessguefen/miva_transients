@@ -1,0 +1,471 @@
+<MvFUNCTION NAME = "Module_Description" PARAMETERS = "module var" STANDARDOUTPUTLEVEL = "compresswhitespace">
+	<MvASSIGN NAME = "l.module:code"		VALUE = "tg_transients">
+	<MvASSIGN NAME = "l.module:name"		VALUE = "Transients">
+	<MvASSIGN NAME = "l.module:provider"	VALUE = "Tess Guefen">
+	<MvASSIGN NAME = "l.module:version"		VALUE = "1.006">
+	<MvASSIGN NAME = "l.module:api_ver"		VALUE = "9.00">
+	<MvASSIGN NAME = "l.module:description"	VALUE = "Save Cached versions of data, set an expiration time, and be happy.">
+	<MvASSIGN NAME = "l.module:features"	VALUE = "util, vis_util, data_store, json, clientside">
+</MvFUNCTION>
+
+<MvCOMMENT>
+| ========================================================================================================================
+|	INSTALL
+| ========================================================================================================================
+</MvCOMMENT>
+
+<MvFUNCTION NAME = "Module_Install_Store" PARAMETERS = "module var" STANDARDOUTPUTLEVEL = "text, html, compresswhitespace">
+	<MvCOMMENT>
+	===========================
+	Create Transients Table
+	===========================
+	</MvCOMMENT>
+
+	<MvQUERY NAME	= "Merchant"
+			 QUERY	= "{ 'CREATE TABLE ' $  g.Store_Table_Prefix $ 'Transients
+						  (
+							tkey		' $ [ g.Module_Library_Native_DBAPI ].DB_Type_CHAR( 255 )		$ ',
+							expires	' $ [ g.Module_Library_Native_DBAPI ].DB_Type_NUMBER( 0, 255 )	$ ',
+							tvalue	' $ [ g.Module_Library_Native_DBAPI ].DB_Type_MEMO()			$ '
+						  ) ' }">
+	<MvIF EXPR = "{ g.MvQUERY_Error }">
+		<MvFUNCTIONRETURN VALUE = "{ [ g.Module_Library_Utilities ].Error( 'TRANSIENTS-INSTALL-1001:', 'An error occured while creating the table Transients. Please make sure this table was not already created.' ) }">
+	</MvIF>
+
+	<MvQUERY NAME	= "Merchant"
+			 QUERY	= "{ 'CREATE UNIQUE INDEX ' $ g.Store_Table_Prefix $ 'Transients ON ' $ g.Store_Table_Prefix $ 'Transients ( tkey )' }">
+	<MvIF EXPR = "{ g.MvQUERY_Error }">
+		<MvQUERY NAME = "Merchant" QUERY = "{ 'DROP TABLE ' $  g.Store_Table_Prefix $ 'Transients' }">
+		<MvFUNCTIONRETURN VALUE = "{ [ g.Module_Library_Utilities ].Error( 'TRANSIENTS-INSTALL-1002:', g.MvQUERY_Error ) }">
+	</MvIF>
+	<MvFUNCTIONRETURN VALUE = 1 />
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "Module_Upgrade_Store" PARAMETERS = "module var, version" STANDARDOUTPUTLEVEL = "" ERROROUTPUTLEVEL = "">
+	<MvFUNCTIONRETURN VALUE = 1 />
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "Module_Uninstall_Store" PARAMETERS = "module var" STANDARDOUTPUTLEVEL = "" ERROROUTPUTLEVEL = "">
+	<MvQUERY NAME = "Merchant" QUERY = "{ 'DROP TABLE ' $  g.Store_Table_Prefix $ 'Transients' }">
+	<MvFUNCTIONRETURN VALUE = 1 />
+</MvFUNCTION>
+
+<MvCOMMENT>
+| ========================================================================================================================
+|	VIS_UTIL
+| ========================================================================================================================
+</MvCOMMENT>
+
+<MvFUNCTION NAME = "StoreUtilityModule_Action" PARAMETERS = "module var" STANDARDOUTPUTLEVEL = "text, html, compresswhitespace">
+	<MvFUNCTIONRETURN VALUE = 1 />
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "StoreUtilityModule_LeftNavigation" PARAMETERS = "module var, ident" STANDARDOUTPUTLEVEL = "compresswhitespace">
+	<MvFUNCTIONRETURN VALUE = 1 />
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "StoreUtilityModule_Screen" PARAMETERS = "module_var" STANDARDOUTPUTLEVEL = "compresswhitespace">
+	<MvFUNCTIONRETURN VALUE = 1 />
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "StoreUtilityModule_Validate" PARAMETERS = "module_var" STANDARDOUTPUTLEVEL = "compresswhitespace">
+	<MvFUNCTIONRETURN VALUE = 1 />
+</MvFUNCTION>
+
+
+<MvCOMMENT>
+| ========================================================================================================================
+|	VIS_UTIL
+| ========================================================================================================================
+</MvCOMMENT>
+
+<MvFUNCTION NAME = "Module_Utility_Content" PARAMETERS = "module var, tab, load_fields" STANDARDOUTPUTLEVEL = "text, html, compresswhitespace">
+	<MvIF EXPR = "{ l.tab EQ 'TRANSIENTS' }">
+		<MvEVAL EXPR = "{ [ g.Module_Admin ].Element_MMBatchList_HTML() }">
+		<div id="AllTransients"></div>
+	</MvIF>
+	<MvFUNCTIONRETURN VALUE = 1 />
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "Module_Utility_Head" PARAMETERS = "module var, tab" STANDARDOUTPUTLEVEL = "text, html, compresswhitespace">
+	<MvIF EXPR = "{ l.tab EQ 'TRANSIENTS' }">
+		<MvEVAL EXPR = "{ [ g.Module_Admin ].Element_MMBatchList_JavaScript() }">
+		<MvEVAL EXPR = "{ [ g.Module_Admin ].Element_MMBatchList_CSS() }">
+		<script language="JavaScript" src="{ g.clientside_url $ 'Module_Code=' $ encodeattribute( l.module:code ) $ '&Filename=AllTransients_functions.js' }"></script>
+		<script language="JavaScript" src="{ g.clientside_url $ 'Module_Code=' $ encodeattribute( l.module:code ) $ '&Filename=AllTransients.js' }"></script>
+		<script language="JavaScript">
+			MMScreen_LoadFinished( function() { new AllTransients_Batchlist(); } );
+		</script>
+	</MvIF>
+	<MvFUNCTIONRETURN VALUE = 1 />
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "Module_Utility_Tabs" PARAMETERS = "module_var" STANDARDOUTPUTLEVEL = "compresswhitespace">
+	<MvFUNCTIONRETURN VALUE = "TRANSIENTS:Transients" />
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "Module_Utility_Update" PARAMETERS = "module_var" STANDARDOUTPUTLEVEL = "compresswhitespace">
+	<MvFUNCTIONRETURN VALUE = 1 />
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "Module_Utility_Validate" PARAMETERS = "module_var" STANDARDOUTPUTLEVEL = "compresswhitespace">
+	<MvFUNCTIONRETURN VALUE = 1 />
+</MvFUNCTION>
+
+<MvCOMMENT>
+| ========================================================================================================================
+|	CLIENTSIDE
+| ========================================================================================================================
+</MvCOMMENT>
+
+<MvFUNCTION NAME = "Module_Clientside" PARAMETERS = "module var" STANDARDOUTPUTLEVEL = "text, compresswhitespace">
+	<MvIF EXPR = "{ g.Filename EQ 'AllTransients_functions.js' }">
+		<MvINCLUDE FILE = "js/AllTransients_functions.js">
+	</MvIF>
+	<MvIF EXPR = "{ g.Filename EQ 'AllTransients.js' }">
+		<MvINCLUDE FILE = "js/AllTransients.js">
+	</MvIF>
+</MvFUNCTION>
+
+
+<MvCOMMENT>
+| ========================================================================================================================
+|	JSON
+| ========================================================================================================================
+</MvCOMMENT>
+
+<MvFUNCTION NAME = "Module_JSON" PARAMETERS = "module var" STANDARDOUTPUTLEVEL = "text, compresswhitespace">
+	<MvIF EXPR = "{ g.Module_Function EQ 'AllTransients_Load_Query' }">
+		<MvEVAL EXPR = "{ Batchlist_Transients( l.module) }">
+	</MvIF>
+	<MvIF EXPR = "{ g.Module_Function EQ 'Delete_Transient' }">
+		<MvIF EXPR = "{ Delete_Transient( trim( g.Transient_Key ) ) }">
+			{
+				"success": 1
+			}
+		<MvELSE>
+			{
+				"success": 0
+			}
+		</MvIF>
+	</MvIF>
+</MvFUNCTION>
+
+<MvCOMMENT>
+| ========================================================================================================================
+|	MODULE FUNCTIONS
+|	1. Get_Transient( key )
+|	2. Set_Transient( key, value, expires )
+|	3. Transient_ReadyTheme_NavigationSet( readytheme_code, expires )
+|	4. Transient_Load_NavigationSet( readytheme_code )
+|	5. Transient_ReadyTheme_Image( readytheme_code, expires )
+|	6. Transient_Load_Link( item var )
+|	7. Delete_Transient( key )
+|	8. Batchlist_Transients
+| ========================================================================================================================
+</MvCOMMENT>
+
+<MvFUNCTION NAME = "Get_Transient" PARAMETERS = "key" STANDARDOUTPUTLEVEL = "">
+	<MvASSIGN NAME = "l.key" VALUE = "{ trim( l.key ) }">
+
+	<MvIF EXPR = "{ ISNULL l.key }">
+		<MvFUNCTIONRETURN VALUE = "" />
+	</MvIF>
+
+	<MvIF EXPR = "{ NOT Get_Transient_LowLevel( l.key, l.output ) }">
+		<MvFUNCTIONRETURN VALUE = "" />
+	</MvIF>
+
+	<MvFUNCTIONRETURN VALUE = "{ l.output }">
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "Get_Transient_LowLevel" PARAMETERS = "key, output var" STANDARDOUTPUTLEVEL = "" ERROROUTPUTLEVEL = "">
+	<MvOPENVIEW	NAME	= "Merchant"
+					VIEW 	= "GetTransients"
+					QUERY 	= "{ 'SELECT
+									*
+								FROM ' $
+									g.Store_Table_Prefix $ 'Transients
+								WHERE
+									tkey = ?'
+								}"
+					FIELDS	= "l.key">
+
+	<MvIF EXPR = "{ g.MvOPENVIEW_Error }">
+		<MvFUNCTIONRETURN VALUE = "{ [ g.Module_Library_Utilities ].Error( 'TRANSIENTS-MOD-2000:', 'An error occurred while retrieving the requestest Transient.' ) }">
+	</MvIF>
+
+	<MvIF EXPR = "{ GetTransients.d.EOF }">
+		<MvFUNCTIONRETURN VALUE = "{ [ g.Module_Library_DB ].Error_Load_EOF( '#Error# Could Not Find KEY' ) }">
+	</MvIF>
+
+	<MvASSIGN NAME = "l.transient:key"		VALUE = "{ GetTransients.d.tkey }">
+	<MvASSIGN NAME = "l.transient:expires"	VALUE = "{ GetTransients.d.expires }">
+	<MvASSIGN NAME = "l.transient:value"	VALUE = "{ GetTransients.d.tvalue }">
+
+	<MvCLOSEVIEW NAME = "Merchant" VIEW = "GetTransients">
+
+	<MvCOMMENT> === [ Check if Transient is expired ] === </MvCOMMENT>
+	<MvIF EXPR = "{ s.dyn_time_t GT l.transient:expires }">
+		<MvASSIGN NAME = "l.success" VALUE = "{ Delete_Transient( l.transient:key ) }">
+	</MvIF>
+
+	<MvASSIGN NAME = "l.output" VALUE = "{ l.transient:value }">
+
+	<MvFUNCTIONRETURN VALUE = 1 />
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "Set_Transient" PARAMETERS = "key, value, expires" STANDARDOUTPUTLEVEL = "" ERROROUTPUTLEVEL = "">
+	<MvASSIGN NAME = "l.value" VALUE = "{ trim( l.value ) }">
+	<MvASSIGN NAME = "l.key" VALUE = "{ trim( l.key ) }">
+	
+	<MvASSIGN NAME = "l.transient" VALUE = "{ Get_Transient( l.key ) }">
+
+	<MvIF EXPR = "{ NOT l.value OR NOT l.key }">
+		<MvFUNCTIONRETURN>
+	</MvIF>
+
+	<MvIF EXPR = "{ l.transient }">
+		<MvASSIGN NAME = "l.success" VALUE = "{  Delete_Transient( l.key ) }">
+	</MvIF>
+
+	<MvASSIGN NAME = "l.expires" VALUE = "{ l.expires + s.dyn_time_t }">
+
+	<MvQUERY	NAME 	= "Merchant"
+				QUERY 	= "{ 'INSERT INTO ' $ g.Store_Table_Prefix $ 'Transients
+								( tkey, tvalue, expires )
+								VALUES
+								(?, ?, ?)'}"
+			 	FIELDS = "l.key, l.value, l.expires">
+	<MvIF EXPR = "{ g.MvQUERY_Error }">
+		<MvFUNCTIONRETURN VALUE = "{ [ g.Module_Library_Utilities ].Error( 'QNA-MOD-2017', g.MvQUERY_Error ) }">
+	</MvIF>
+
+	<MvFUNCTIONRETURN VALUE = 1 />
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "Transient_ReadyTheme_NavigationSet" PARAMETERS = "readytheme_code, expires" STANDARDOUTPUTLEVEL = "" ERROROUTPUTLEVEL = "">
+	<MvASSIGN NAME = "l.expires"			VALUE = "{ trim( l.expires ) }">
+	<MvASSIGN NAME = "l.readytheme_code"	VALUE = "{ trim( l.readytheme_code ) }">
+	<MvASSIGN NAME = "l.key" VALUE = "{ 'navigationset__' $ l.readytheme_code }">
+
+	<MvIF EXPR = "{ NOT l.expires OR NOT l.readytheme_code }">
+		<MvFUNCTIONRETURN>
+	</MvIF>
+	
+	<MvASSIGN NAME = "l.get_transient" VALUE = "{ Get_Transient( l.key ) }">
+	<MvIF EXPR = "{ l.get_transient }">
+		<MvFUNCTIONRETURN VALUE = "{ l.get_transient }">
+	</MvIF>
+
+	<MvASSIGN NAME = "l.navigationset" VALUE = "{ Transient_Load_NavigationSet( l.readytheme_code ) }">
+
+	<MvIF EXPR = "{ NOT l.navigationset }">
+		<MvFUNCTIONRETURN>
+	</MvIF>
+
+	<MvIF EXPR = "{ [ g.Module_Feature_TUI_DB ].ManagedTemplate_Load_ID( l.navigationset:templ_id, l.navigationset_template ) }">
+		<MvASSIGN NAME = "l.all_settings:readytheme" VALUE = "{ l.navigationset }">
+
+		<MvCAPTURE VARIABLE = "l.return"><MvEVAL EXPR = "{ [ g.Store_Template_Path $ l.navigationset_template:filename ].Template_Render( l.settings, l.all_settings ) }"></MvCAPTURE>
+	</MvIF>
+
+	<MvIF EXPR = "{ Set_Transient( l.key, l.return, l.expires )  }">
+		<MvFUNCTIONRETURN VALUE = "{ l.return }">
+	</MvIF>
+
+	<MvFUNCTIONRETURN>
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "Transient_Load_NavigationSet" PARAMETERS = "readytheme_code" STANDARDOUTPUTLEVEL = "" ERROROUTPUTLEVEL ="">
+	<MvASSIGN NAME = "l.readytheme_code" VALUE = "{ trim( l.readytheme_code ) }">
+
+	<MvIF EXPR = "{ NOT l.readytheme_code }">
+		<MvFUNCTIONRETURN>
+	</MvIF>
+
+	<MvIF EXPR = "{ NOT [ g.Module_Root $ 'modules/component/readytheme.mvc' ].ReadyTheme_NavigationSet_Load_Code( l.readytheme_code, l.navigationset ) }">
+		<MvFUNCTIONRETURN>
+	</MvIF>
+
+	<MvASSIGN NAME = "l.navigationitem_count" VALUE = "{ [ g.Module_Root $ 'modules/component/readytheme.mvc' ].ReadyTheme_NavigationItemList_Load_Heirarchy( l.navigationset:id, l.navigationset:navigationitems ) }">
+
+	<MvIF EXPR = "{ NOT l.navigationitem_count }">
+		<MvFUNCTIONRETURN>
+	</MvIF>
+
+	<MvFOREACH ITERATOR = "l.navigationitem" ARRAY = "l.navigationset:navigationitems" COUNT = "{ l.navigationitem_count }">
+		<MvIF EXPR = "{ l.navigationitem:active EQ 0 }">
+			<MvFOREACHCONTINUE>
+		</MvIF>
+
+		<MvASSIGN NAME = "l.navigationitem" VALUE = "{ Transient_Load_Link( l.navigationitem ) }">
+		<MvIF EXPR = "{ l.navigationitem:items }">
+			<MvFOREACH ITERATOR = "l.navigationitem_level2" ARRAY = "l.navigationitem:items">
+				<MvIF EXPR = "{ l.navigationitem_level2:active EQ 0 }">
+					<MvFOREACHCONTINUE>
+				</MvIF>
+
+				<MvASSIGN NAME = "l.navigationitem_level2" VALUE = "{ Transient_Load_Link( l.navigationitem_level2 ) }">
+				<MvIF EXPR = "{ l.navigationitem_level2:items }">
+					<MvFOREACH ITERATOR = "l.navigationitem_level3" ARRAY = "l.navigationitem_level2:items">
+						<MvIF EXPR = "{ l.navigationitem_level3:active EQ 0 }">
+							<MvFOREACHCONTINUE>
+						</MvIF>
+
+						<MvASSIGN NAME = "l.navigationitem_level3" VALUE = "{ Transient_Load_Link( l.navigationitem_level3 ) }">
+					</MvFOREACH>
+				</MvIF>
+			</MvFOREACH>
+		</MvIF>
+	</MvFOREACH>
+	<MvFUNCTIONRETURN VALUE = "{ l.navigationset }" />
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "Transient_ReadyTheme_Image" PARAMETERS = "readytheme_code, expires" STANDARDOUTPUTLEVEL = "compresswhitespace" ERROROUTPUTLEVEL = "">
+	<MvASSIGN NAME = "l.readytheme_code" VALUE = "{ trim( l.readytheme_code ) }">
+	<MvASSIGN NAME = "l.expires" VALUE = "{ trim( l.expires ) }">
+	<MvASSIGN NAME = "l.key" VALUE = "{ 'image__' $ l.readytheme_code }">
+
+	<MvIF EXPR = "{ NOT l.readytheme_code OR NOT l.expires }">
+		<MvFUNCTIONRETURN>
+	</MvIF>
+
+	<MvASSIGN NAME = "l.get_transient" VALUE = "{ Get_Transient( l.key ) }">
+	<MvIF EXPR = "{ l.get_transient }">
+		<MvFUNCTIONRETURN VALUE = "{ l.get_transient }">
+	</MvIF>
+
+	<MvIF EXPR = "{ NOT [ g.Module_Root $ 'modules/component/readytheme.mvc' ].ReadyTheme_Image_Load_Code( l.readytheme_code, l.image ) }">
+		<MvFUNCTIONRETURN>
+	</MvIF>
+
+	<MvIF EXPR = "{ NOT [ g.Module_Library_DB ].Image_Load_ID( l.image:image_id, l.loaded_image ) }">
+		<MvFUNCTIONRETURN>
+	</MvIF>
+
+	<MvASSIGN NAME = "l.image:url" VALUE = "{ l.loaded_image:image }">
+
+	<MvIF EXPR = "{ l.image:link_type NE 'N'}">
+		<MvASSIGN NAME = "l.image" VALUE = "{ Transient_Load_Link( l.image ) }">
+	</MvIF>
+
+	<MvIF EXPR = "{ l.image:image_wdth AND l.image:image_hght }">
+		<MvIF EXPR = "{ [ g.Module_Library_DB ].Image_Load_File( l.image:url, l.crop_image ) }">
+			<MvIF EXPR = "{ [ g.Module_Library_DB ].GeneratedImage_FindOrInsert_Image_Dimensions( l.crop_image, l.image:image_wdth, l.image:image_hght, l.generated_image ) }">
+				<MvASSIGN NAME = "l.image:cropped_url" VALUE = "{ l.generated_image:image }">
+			</MvIF>
+		</MvIF>
+	</MvIF>
+	
+	<MvASSIGN NAME = "l.return" VALUE = "{ miva_array_serialize( l.image ) }">
+	<MvIF EXPR = "{ Set_Transient( l.key, l.return, l.expires )  }">
+		<MvFUNCTIONRETURN VALUE = "{ l.return }">
+	</MvIF>
+
+	<MvFUNCTIONRETURN>
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "Transient_Load_Link" PARAMETERS = "item var" STANDARDOUTPUTLEVEL = "compresswhitespace" ERROROUTPUTLEVEL = "">
+	<MvIF EXPR = "{ NOT l.item }">
+		<MvFUNCTIONRETURN>
+	</MvIF>
+
+	<MvASSIGN NAME = "l.flags:nosession" VALUE = "1" />
+
+	<MvIF EXPR = "{ l.item:link_type EQ 'P' AND l.item:link_dest }">
+		<MvDO FILE = "{ g.Module_Feature_URI_UT }" NAME = "l.item_link" VALUE = "{ Store_Product_Code_URL(  l.item:link_dest, l.flags ) }">
+		<MVIF EXPR = "{ l.item_link }">
+			<MvASSIGN NAME = "l.item:link" VALUE = "{ '<a href="' $ l.item_link $ '" target="' $ l.item:link_targ $ '">' $ l.item:name $ '</a>' }">
+			<MvASSIGN NAME = "l.item:link_url" VALUE = "{ l.item_link }">
+			<MvFUNCTIONRETURN VALUE = "{ l.item }" />
+		</MvIF>
+	</MvIF>
+
+	<MvIF EXPR = "{ l.item:link_type EQ 'C' AND l.item:link_dest }">
+		<MvDO FILE = "{ g.Module_Feature_URI_UT }" NAME = "l.item_link" VALUE = "{ Store_Category_Code_URL(  l.item:link_dest, l.flags ) }">
+		<MVIF EXPR = "{ l.item_link }">
+			<MvASSIGN NAME = "l.item:link" VALUE = "{ '<a href="' $ l.item_link $ '" target="' $ l.item:link_targ $ '">' $ l.item:name $ '</a>' }">
+			<MvASSIGN NAME = "l.item:link_url" VALUE = "{ l.item_link }">
+			<MvFUNCTIONRETURN VALUE = "{ l.item }" />
+		</MvIF>
+	</MvIF>
+
+	<MvIF EXPR = "{ l.item:link_type EQ 'G' AND l.item:link_dest }">
+		<MvIF EXPR = "{ [ g.Module_Feature_TUI_DB ].Page_Load_Code( l.item:link_dest, l.item:loaded_page ) }">
+			<MvIF EXPR = "{ l.item:loaded_page:id }">
+				<MvDO FILE = "{ g.Module_Feature_URI_UT }" NAME = "l.item_link" VALUE = "{ Store_Page_URL(  l.item:loaded_page, l.flags ) }">
+				<MvIF EXPR = "{ l.item_link }">
+					<MvASSIGN NAME = "l.item:link" VALUE = "{ '<a href="' $ l.item_link $ '" target="' $ l.item:link_targ $ '">' $ l.item:name $ '</a>' }">
+					<MvASSIGN NAME = "l.item:link_url" VALUE = "{ l.item_link }">
+					<MvFUNCTIONRETURN VALUE = "{ l.item }" />
+				</MvIF>
+			</MvIF>
+		</MvIF>
+	</MvIF>
+
+	<MvIF EXPR = "{ l.item:link_type EQ 'U' AND l.item:link_dest }">
+		<MvASSIGN NAME = "l.item:link" VALUE = "{ '<a href="' $ l.link_dest $ '" target="' $ l.item:link_targ $ '">' $ l.item:name $ '</a>' }">
+		<MvASSIGN NAME = "l.item:link_url" VALUE = "{ l.link_dest }">
+		<MvFUNCTIONRETURN VALUE = "{ l.item }" />
+	</MvIF>
+
+	<MvASSIGN NAME = "l.item:link" VALUE = "{ l.item:name }">
+	<MvFUNCTIONRETURN VALUE = "{ l.item }" />
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "Delete_Transient" PARAMETERS = "key" STANDARDOUTPUTLEVEL = "" ERROROUTPUTLEVEL = "">
+	<MvQUERY	NAME 	= "Merchant"
+				QUERY 	= "{ 'DELETE FROM ' $ g.Store_Table_Prefix $ 'Transients WHERE tkey = ?' }"
+			 	FIELDS = "l.key">
+	<MvFUNCTIONRETURN VALUE = 1 />
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "Batchlist_Transients" PARAMETERS = "module var" STANDARDOUTPUTLEVEL = "text, html, compresswhitespace">
+	<MvASSIGN NAME = "g.Filter" VALUE = "{ trim( g.Filter ) }">
+	<MvASSIGN NAME = "g.Sort" VALUE = "{ trim( g.Sort ) }">
+	<MvASSIGN NAME = "g.Offset" VALUE = "{ trim( g.Offset ) }">
+	<MvASSIGN NAME = "g.Count" VALUE = "{ trim( g.Count ) }">
+	<MvASSIGN NAME = "l.search_query" VALUE = "">
+
+	<MvEVAL EXPR = "{ [ g.Module_Library_DB ].SQL_Query_SELECT( l.search_query,'s.*' ) }">
+
+	<MvEVAL EXPR = "{ [ g.Module_Library_DB ].SQL_Query_FROM( l.search_query, g.Store_Table_Prefix $ 'Transients', 's' ) }">
+
+	<MvEVAL EXPR = "{ [ g.Module_JSON ].JSON_Filter( l.search_query, g.Filter,'tkey:s.tkey,tvalue:s.tvalue,expires:s.expires' ) }">
+
+	<MvEVAL EXPR = "{ [ g.Module_Library_DB ].SQL_Query_OrderBy_Fields(l.search_query, g.Sort, 'tkey:s.tkey,tvalue:s.tvalue,expires:s.expires', 's.tkey' ) }">
+
+	<MvASSIGN NAME = "l.search_sql" VALUE = "{ [ g.Module_Library_DB].SQL_Query_Build( l.search_query, l.search_fields ) }">
+
+	<MvIF EXPR = "{ NOT [ g.Module_Library_DB ].SQL_Query_Count( l.search_query, l.total_count ) }">
+		<MvFUNCTIONRETURN VALUE = "{ [ g.Module_JSON ].JSON_Response_Error(g.Error_Code, g.Error_Message ) }">
+	<MvELSEIF EXPR = "{ NOT [ g.Module_Library_Native_DBAPI ].DB_OPENVIEW_Range('Merchant', 'Transients', l.search_sql, l.search_fields, g.Offset, g.Count) }">
+		<MvFUNCTIONRETURN VALUE = "{ [ g.Module_JSON ].JSON_Response_Error( 'TRANSIENTS-MOD-2005',g.MvOPENVIEW_Error ) }">
+	</MvIF>
+
+	<MvASSIGN NAME = "l.count" VALUE = 0>
+
+	<MvEVAL EXPR = "{ [ g.Module_JSON ].JSON_Response_Start() }">
+		{
+			"data":
+				[
+					<MvWHILE EXPR = "{ ( NOT Transients.d.EOF ) AND ( ( g.Count EQ 0 ) OR (l.count LT g.Count ) ) }">
+					<MvEVAL EXPR = "{ [ g.Module_JSON ].JSON_ArrayElement_Start( l.count )}">
+					"tkey": "<MvEVAL EXPR = "{ [ g.Module_JSON ].JSON_Encode( Transients.d.tkey ) }">",
+					"tvalue": "<MvEVAL EXPR = "{ [ g.Module_JSON ].JSON_Encode( Transients.d.tvalue ) }">",
+					"expires": "<MvEVAL EXPR = "{ int( Transients.d.expires ) }">",
+					<MvASSIGN NAME = "l.fdt" VALUE = "{ [ g.Module_Library_Utilities].Format_Date( Transients.d.expires, s.miva_language ) }">
+					<MvDO FILE = "{ g.Module_Library_Utilities }" NAME = "l.fdt" VALUE = "{ l.fdt $ ' ' $ Format_Time( Transients.d.expires, s.miva_language ) }">
+					"f_expires": "<MvEVAL EXPR = "{ [ g.Module_JSON ].JSON_Encode( l.fdt ) }">"
+					<MvEVAL EXPR = "{ [ g.Module_JSON ].JSON_ArrayElement_End() }">
+					<MvSKIP NAME = "Merchant" VIEW = "Transients" ROWS = 1>
+					</MvWHILE>
+				],
+
+			"total_count": <MvEVAL EXPR = "{ int( l.total_count ) }">,
+			"start_offset": <MvEVAL EXPR = "{ int( g.Offset ) }">
+		}
+		<MvCLOSEVIEW NAME = "Merchant" VIEW = "Transients">
+	}
+</MvFUNCTION>

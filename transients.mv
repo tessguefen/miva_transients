@@ -406,7 +406,7 @@
 	</MvIF>
 
 	<MvIF EXPR = "{ l.item:link_type EQ 'U' AND l.item:link_dest }">
-		<MvASSIGN NAME = "l.item:link" VALUE = "{ '<a href="' $ l.link_dest $ '" target="' $ l.item:link_targ $ '">' $ l.item:name $ '</a>' }">
+		<MvASSIGN NAME = "l.item:link" VALUE = "{ '<a href="' $ l.item:link_dest $ '" target="' $ l.item:link_targ $ '">' $ l.item:name $ '</a>' }">
 		<MvASSIGN NAME = "l.item:link_url" VALUE = "{ l.link_dest }">
 		<MvFUNCTIONRETURN VALUE = "{ l.item }" />
 	</MvIF>

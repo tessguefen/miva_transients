@@ -147,8 +147,7 @@ The variable contains the following:
 ```javascript
 Transient_Load_Link( item var )
 ```
-**readytheme_code**: The ReadyTheme Image Code
-**expires**: The amount of seconds to save the transient
+**item var**: The item variable
 
 This returns the item, as well as `:link` and `:link_url`. This does **not** cache the data, this function only returns it. The variable must have the following in it's structure:
 - link_type ( P, C, G, U, N )

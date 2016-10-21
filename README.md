@@ -37,7 +37,7 @@ Set_Transient(key, value, expiration)
 ```javascript
 Get_Transient(key)
 ```
-This will retrieve your transient. If you have a transient that has not expired, it will return the value. If it has expired, or does not exsist it will return 0.
+This will retrieve your transient. If you have a transient that has not expired, it will return the value. If it has expired, or does not exsist it will return null.
 
 **Example Syntax of Get_Transient**
 
@@ -84,7 +84,7 @@ Transient_ReadyTheme_NavigationSet( readytheme_code, expires )
 
 **expires**: Amount of seconds to save the transient
 
-This will first check if the transient exsists. If it does, it returns the transient. If it does not, it will set a transient with he key `navigationset__readytheme_code`, and save it. The return value is the rendered HTML data.
+This will first check if the transient exsists. If it does, it returns the transient. If it does not, it will set a transient with the key `navigationset__readytheme_code`, and save it. The return value is the rendered HTML data.
 
 **Example Syntax of Transient_ReadyTheme_NavigationSet**
 ```xml
@@ -124,7 +124,7 @@ Transient_ReadyTheme_Image( readytheme_code, expires )
 
 **expires**: The amount of seconds to save the transient
 
-This will first check if the transient exsists. If it does, it returns the transient. If it does not, it will set a transient with he key `image__readytheme_code`, and save it The return value is the serialized variable of the image.
+This will first check if the transient exsists. If it does, it returns the transient. If it does not, it will set a transient with the key `image__readytheme_code`, and save it The return value is the serialized variable of the image.
 
 The variable contains the following:
 

@@ -278,6 +278,39 @@
 	<MvFUNCTIONRETURN>
 </MvFUNCTION>
 
+<MvFUNCTION NAME = "Transient_ReadyTheme_NavigationSet_WithSettings" PARAMETERS = "readytheme_code, expires, all_settings" STANDARDOUTPUTLEVEL = "" ERROROUTPUTLEVEL = "">
+	<MvASSIGN NAME = "l.expires"			VALUE = "{ trim( l.expires ) }">
+	<MvASSIGN NAME = "l.readytheme_code"	VALUE = "{ trim( l.readytheme_code ) }">
+	<MvASSIGN NAME = "l.key" VALUE = "{ 'navigationset__' $ l.readytheme_code }">
+
+	<MvIF EXPR = "{ NOT l.expires OR NOT l.readytheme_code }">
+		<MvFUNCTIONRETURN>
+	</MvIF>
+	
+	<MvASSIGN NAME = "l.get_transient" VALUE = "{ Get_Transient( l.key ) }">
+	<MvIF EXPR = "{ l.get_transient }">
+		<MvFUNCTIONRETURN VALUE = "{ l.get_transient }">
+	</MvIF>
+
+	<MvASSIGN NAME = "l.navigationset" VALUE = "{ Transient_Load_NavigationSet( l.readytheme_code ) }">
+
+	<MvIF EXPR = "{ NOT l.navigationset }">
+		<MvFUNCTIONRETURN>
+	</MvIF>
+
+	<MvIF EXPR = "{ [ g.Module_Feature_TUI_DB ].ManagedTemplate_Load_ID( l.navigationset:templ_id, l.navigationset_template ) }">
+		<MvASSIGN NAME = "l.all_settings:readytheme" VALUE = "{ l.navigationset }">
+
+		<MvCAPTURE VARIABLE = "l.return"><MvEVAL EXPR = "{ [ g.Store_Template_Path $ l.navigationset_template:filename ].Template_Render( l.null, l.all_settings ) }"></MvCAPTURE>
+	</MvIF>
+
+	<MvIF EXPR = "{ Set_Transient( l.key, l.return, l.expires )  }">
+		<MvFUNCTIONRETURN VALUE = "{ l.return }">
+	</MvIF>
+
+	<MvFUNCTIONRETURN>
+</MvFUNCTION>
+
 <MvFUNCTION NAME = "Transient_Load_NavigationSet" PARAMETERS = "readytheme_code" STANDARDOUTPUTLEVEL = "" ERROROUTPUTLEVEL ="">
 	<MvASSIGN NAME = "l.readytheme_code" VALUE = "{ trim( l.readytheme_code ) }">
 

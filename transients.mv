@@ -154,14 +154,16 @@
 <MvCOMMENT>
 | ========================================================================================================================
 |	MODULE FUNCTIONS
-|	1. Get_Transient( key )
-|	2. Set_Transient( key, value, expires )
-|	3. Transient_ReadyTheme_NavigationSet( readytheme_code, expires )
-|	4. Transient_Load_NavigationSet( readytheme_code )
-|	5. Transient_ReadyTheme_Image( readytheme_code, expires )
-|	6. Transient_Load_Link( item var )
-|	7. Delete_Transient( key )
-|	8. Batchlist_Transients
+|	1.	Get_Transient( key )
+|	2.	Set_Transient( key, value, expires )
+|	3.	Transient_ReadyTheme_NavigationSet( readytheme_code, expires )
+|	4.	Transient_ReadyTheme_NavigationSet_WithSettings( readytheme_code, expires, all_settings )
+|	5.	Transient_Load_NavigationSet( readytheme_code )
+|	6.	Transient_ReadyTheme_Image( readytheme_code, expires )
+|	7.	Transient_Load_Link( item var )
+|	8.	Transient_ReadyTheme_ContentSection( readytheme_code, expires, all_settings )
+|	9.	Delete_Transient( key )
+|	10. Batchlist_Transients
 | ========================================================================================================================
 </MvCOMMENT>
 
@@ -446,6 +448,37 @@
 
 	<MvASSIGN NAME = "l.item:link" VALUE = "{ l.item:name }">
 	<MvFUNCTIONRETURN VALUE = "{ l.item }" />
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "Transient_ReadyTheme_ContentSection" PARAMETERS = "readytheme_code, expires, all_settings" STANDARDOUTPUTLEVEL = "" ERROROUTPUTLEVEL = "">
+	<MvASSIGN NAME = "l.expires"			VALUE = "{ trim( l.expires ) }">
+	<MvASSIGN NAME = "l.readytheme_code"	VALUE = "{ trim( l.readytheme_code ) }">
+	<MvASSIGN NAME = "l.key" VALUE = "{ 'contentsection__' $ l.readytheme_code }">
+
+	<MvIF EXPR = "{ NOT l.expires OR NOT l.readytheme_code }">
+		<MvFUNCTIONRETURN>
+	</MvIF>
+	
+	<MvASSIGN NAME = "l.get_transient" VALUE = "{ Get_Transient( l.key ) }">
+	<MvIF EXPR = "{ l.get_transient }">
+		<MvFUNCTIONRETURN VALUE = "{ l.get_transient }">
+	</MvIF>
+
+	<MvDO FILE = "{ g.Module_Root $ 'modules/component/readytheme.mvc' }" NAME = "l.load_content_section" VALUE = "{ ReadyTheme_ContentSection_Load_Code( l.readytheme_code, l.loaded_content_section ) }">
+
+	<MvIF EXPR = "{ NOT l.loaded_content_section OR l.loaded_content_section:active EQ 0 }">
+		<MvFUNCTIONRETURN>
+	</MvIF>
+
+	<MvIF EXPR = "{ [ g.Module_Feature_TUI_DB ].ManagedTemplate_Load_ID( l.loaded_content_section:templ_id, l.content_section ) }">
+		<MvCAPTURE VARIABLE = "l.return"><MvEVAL EXPR = "{ [ g.Store_Template_Path $ l.content_section:filename ].Template_Render( l.null, l.all_settings ) }"></MvCAPTURE>
+	</MvIF>
+
+	<MvIF EXPR = "{ Set_Transient( l.key, l.return, l.expires )  }">
+		<MvFUNCTIONRETURN VALUE = "{ l.return }">
+	</MvIF>
+
+	<MvFUNCTIONRETURN>
 </MvFUNCTION>
 
 <MvFUNCTION NAME = "Delete_Transient" PARAMETERS = "key" STANDARDOUTPUTLEVEL = "" ERROROUTPUTLEVEL = "">

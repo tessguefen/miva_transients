@@ -157,11 +157,11 @@
 |	1.	Get_Transient( key )
 |	2.	Set_Transient( key, value, expires )
 |	3.	Transient_ReadyTheme_NavigationSet( readytheme_code, expires )
-|	4.	Transient_ReadyTheme_NavigationSet_WithSettings( readytheme_code, expires, all_settings )
+|	4.	Transient_ReadyTheme_NavigationSet_WithSettings( readytheme_code, expires, all_settings var )
 |	5.	Transient_Load_NavigationSet( readytheme_code )
 |	6.	Transient_ReadyTheme_Image( readytheme_code, expires )
 |	7.	Transient_Load_Link( item var )
-|	8.	Transient_ReadyTheme_ContentSection( readytheme_code, expires, all_settings )
+|	8.	Transient_ReadyTheme_ContentSection( readytheme_code, expires, all_settings var )
 |	9.	Delete_Transient( key )
 |	10. Batchlist_Transients
 | ========================================================================================================================
@@ -280,7 +280,7 @@
 	<MvFUNCTIONRETURN>
 </MvFUNCTION>
 
-<MvFUNCTION NAME = "Transient_ReadyTheme_NavigationSet_WithSettings" PARAMETERS = "readytheme_code, expires, all_settings" STANDARDOUTPUTLEVEL = "" ERROROUTPUTLEVEL = "">
+<MvFUNCTION NAME = "Transient_ReadyTheme_NavigationSet_WithSettings" PARAMETERS = "readytheme_code, expires, all_settings var" STANDARDOUTPUTLEVEL = "" ERROROUTPUTLEVEL = "">
 	<MvASSIGN NAME = "l.expires"			VALUE = "{ trim( l.expires ) }">
 	<MvASSIGN NAME = "l.readytheme_code"	VALUE = "{ trim( l.readytheme_code ) }">
 	<MvASSIGN NAME = "l.key" VALUE = "{ 'navigationset__' $ l.readytheme_code }">
@@ -450,7 +450,7 @@
 	<MvFUNCTIONRETURN VALUE = "{ l.item }" />
 </MvFUNCTION>
 
-<MvFUNCTION NAME = "Transient_ReadyTheme_ContentSection" PARAMETERS = "readytheme_code, expires, all_settings" STANDARDOUTPUTLEVEL = "" ERROROUTPUTLEVEL = "">
+<MvFUNCTION NAME = "Transient_ReadyTheme_ContentSection" PARAMETERS = "readytheme_code, expires, all_settings var" STANDARDOUTPUTLEVEL = "" ERROROUTPUTLEVEL = "">
 	<MvASSIGN NAME = "l.expires"			VALUE = "{ trim( l.expires ) }">
 	<MvASSIGN NAME = "l.readytheme_code"	VALUE = "{ trim( l.readytheme_code ) }">
 	<MvASSIGN NAME = "l.key" VALUE = "{ 'contentsection__' $ l.readytheme_code }">

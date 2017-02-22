@@ -1,0 +1,2 @@
+Add "Delete All" button in batchlist?
+Have a button for "disable caching" (saw it in WP's plugin that extened transients.. was kinda nice)

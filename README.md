@@ -15,8 +15,10 @@ To use this, you must use mvt:do, and having experience with mvt:do is recommend
 ## Usage
 
 There are two simple functions you can use:
+- [Set_Transient](#set_transient)
+- [Get_Transient](#get_transient)
 
-### Setting a Transient
+### Setting a Transient<a name="set_transient"></a>
 
 ```javascript
 Set_Transient(key, value, expiration)
@@ -34,7 +36,7 @@ Set_Transient(key, value, expiration)
 <mvt:do file="g.Module_Root $ '/modules/util/transients.mvc'" name="l.set_transient" value="Set_Transient( 'recent_posts', l.settings:my_value_here, 60*60*2)" />
 ```
 
-### Getting a Transient
+### Getting a Transient<a name="get_transient"></a>
 
 ```javascript
 Get_Transient(key)
@@ -71,13 +73,13 @@ This is an example of pulling a Blog's most recent posts, and displaying them on
 # Other Useful Functions with Examples
 
 In Version 1.006 there are 4 new functions:
-- Transient_ReadyTheme_NavigationSet( readytheme_code, expires )
-- Transient_Load_NavigationSet( readytheme_code )
-- Transient_ReadyTheme_Image( readytheme_code, expires )
-- Transient_Load_Link( item var )
-- Transient_ReadyTheme_ContentSection( readytheme_code, expires, all_settings var )
+- [Transient_ReadyTheme_NavigationSet( readytheme_code, expires )](#Transient_ReadyTheme_NavigationSet)
+- [Transient_Load_NavigationSet( readytheme_code )](#Transient_Load_NavigationSet)
+- [Transient_ReadyTheme_Image( readytheme_code, expires )](#Transient_ReadyTheme_Image)
+- [Transient_Load_Link( item var )](#Transient_Load_Link)
+- [Transient_ReadyTheme_ContentSection( readytheme_code, expires, all_settings var )](#Transient_ReadyTheme_ContentSection)
 
-### Transient_ReadyTheme_NavigationSet
+### Transient_ReadyTheme_NavigationSet<a name="Transient_ReadyTheme_NavigationSet"></a>
 
 ```javascript
 Transient_ReadyTheme_NavigationSet( readytheme_code, expires )
@@ -113,7 +115,7 @@ Transient_ReadyTheme_NavigationSet_WithSettings( readytheme_code, expires, all_s
 </mvt:if>
 ```
 
-### Transient_Load_NavigationSet
+### Transient_Load_NavigationSet<a name="Transient_Load_NavigationSet"></a>
 
 ```javascript
 Transient_Load_NavigationSet( readytheme_code )
@@ -131,7 +133,7 @@ This returns the ReadyTheme Navigation Set `l.settings:readytheme` variable, inc
 </mvt:if>
 ```
 
-### Transient_ReadyTheme_Image
+### Transient_ReadyTheme_Image<a name="Transient_ReadyTheme_Image"></a>
 
 ```javascript
 Transient_ReadyTheme_Image( readytheme_code, expires )
@@ -158,7 +160,7 @@ The variable contains the following:
 </mvt:if>
 ```
 
-### Transient_Load_Link
+### Transient_Load_Link<a name="Transient_Load_Link"></a>
 
 ```javascript
 Transient_Load_Link( item var )
@@ -181,13 +183,17 @@ This returns the item, as well as `:link` and `:link_url`. This does **not** cac
 </mvt:if>
 ```
 
-### Transient_ReadyTheme_ContentSection
+### Transient_ReadyTheme_ContentSection<a name="Transient_ReadyTheme_ContentSection"></a>
+
+**Please Note:** If you have custom logic that is outputting variables (i.e. g.show__breadcrumbs), this will not be cached/ output. This is best used when trying to display certain information.
 
 ```javascript
 Transient_ReadyTheme_ContentSection( readytheme_code, expires, all_settings var )
 ```
 **readytheme_code**: The ReadyTheme content section code you want to use
+
 **expires**: Expiration Date
+
 **all_settings var**: `l.settings` needs to be passed through
 
 **Example Syntax of Transient_ReadyTheme_ContentSection**
@@ -202,6 +208,9 @@ Transient_ReadyTheme_ContentSection( readytheme_code, expires, all_settings var 
 ```
 
 **Need a dynamic key for your content section?**
+
+**When this would be useful:** Why not load all your customfield information through a content section, and save the **rendered* HTML instead?
+
 ```javascript
 Transient_ReadyTheme_ContentSection( key, readytheme_code, expires, all_settings var )
 ```

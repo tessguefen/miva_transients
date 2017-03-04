@@ -104,7 +104,7 @@ Transient_ReadyTheme_NavigationSet_WithSettings( readytheme_code, expires, all_s
 ```
 **Example Syntax of Transient_ReadyTheme_NavigationSet_WithSettings**
 ```xml
-<mvt:do file="g.Module_Root $ '/modules/util/transients.mvc'" name="l.settings:navigation_bar_customfields" value="Transient_ReadyTheme_NavigationSet( 'navigation_bar_customfields', 60*60*24, l.settings)" />
+<mvt:do file="g.Module_Root $ '/modules/util/transients.mvc'" name="l.settings:navigation_bar_customfields" value="Transient_ReadyTheme_NavigationSet_WithSettings( 'navigation_bar_customfields', 60*60*24, l.settings)" />
 <mvt:if expr="l.settings:navigation_bar_customfields">
 	&mvt:navigation_bar_customfields;
 <mvt:else>
@@ -205,6 +205,7 @@ Transient_ReadyTheme_ContentSection( readytheme_code, expires, all_settings var 
 ```javascript
 Transient_ReadyTheme_ContentSection( key, readytheme_code, expires, all_settings var )
 ```
+**Example Syntax of Transient_ReadyTheme_ContentSection_Lowlevel (v1.007)**
 ```xml
 <mvt:do file="g.Module_Root $ '/modules/util/transients.mvc'" name="l.settings:customlogic" value="Transient_ReadyTheme_ContentSection_Lowlevel( l.settings:product:code $ '__customlogic', 'customlogic', 24*60*60, l.settings )" />
 <mvt:if expr="l.settings:customlogic">

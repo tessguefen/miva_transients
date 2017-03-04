@@ -4,7 +4,7 @@ A Transient is a simple way of storing cached data in the database temporarily, 
 
 Transients are useful when pinging another API (i.e. Wordpress, Instagram, twitter), and saving data for a set period of time.
 
-Once the module is installed, you will find a tab under **Utilities**. This batch list is used for debugging, viewing transients, and deleting.
+Once the module is installed, you will find a tab under **Utilities**. This batch list is used for debugging, viewing transients, and deleting transients.
 
 ## Please Note
 
@@ -12,7 +12,7 @@ To use this, you must use mvt:do, and having experience with mvt:do is recommend
 
 ## Usage
 
-There are two main functions you can use:
+There are two simple functions you can use:
 
 ### Setting a Transient
 
@@ -58,8 +58,7 @@ This is an example of pulling a Blog's most recent posts, and displaying them on
 	<mvt:eval expr="l.settings:recent_posts" />
 <mvt:else>
 	<mvt:assign name="l.settings:recent_posts" value="''" />
-	<mvt:assign name="g.blog_url" value="'http://www.mydomainname.com/blog/recent-posts/'" />
-	<mvt:call action="g.blog_url" method="'POST'">
+	<mvt:call action="'http://www.mydomainname.com/blog/recent-posts/'" method="'POST'">
 		<mvt:assign name="l.settings:recent_posts" value="l.settings:recent_posts $ s.callvalue" />
 	</mvt:call>
 	<mvt:do file="g.Module_Root $ '/modules/util/transients.mvc'" name="l.set_transient" value="Set_Transient( 'recent_posts', l.settings:recent_posts, 60*60*2)" />
@@ -74,6 +73,7 @@ In Version 1.006 there are 4 new functions:
 - Transient_Load_NavigationSet( readytheme_code )
 - Transient_ReadyTheme_Image( readytheme_code, expires )
 - Transient_Load_Link( item var )
+- Transient_ReadyTheme_ContentSection( readytheme_code, expires, all_settings var )
 
 ### Transient_ReadyTheme_NavigationSet
 
@@ -94,6 +94,20 @@ This will first check if the transient exsists. If it does, it returns the trans
 <mvt:else>
 	<mvt:comment> ==[ Failsafe, incase the Transient Fails ]== </mvt:comment>
 	<mvt:item name="readytheme" param="navigationset( 'navigation_bar' )" />
+</mvt:if>
+```
+**Using custom items in your Navigationset, like customfields?**
+```javascript
+Transient_ReadyTheme_NavigationSet_WithSettings( readytheme_code, expires, all_settings var )
+```
+**Example Syntax of Transient_ReadyTheme_NavigationSet_WithSettings**
+```xml
+<mvt:do file="g.Module_Root $ '/modules/util/transients.mvc'" name="l.settings:navigation_bar_customfields" value="Transient_ReadyTheme_NavigationSet( 'navigation_bar_customfields', 60*60*24, l.settings)" />
+<mvt:if expr="l.settings:navigation_bar_customfields">
+	&mvt:navigation_bar_customfields;
+<mvt:else>
+	<mvt:comment> ==[ Failsafe, incase the Transient Fails ]== </mvt:comment>
+	<mvt:item name="readytheme" param="navigationset( 'navigation_bar_customfields' )" />
 </mvt:if>
 ```
 
@@ -162,5 +176,39 @@ This returns the item, as well as `:link` and `:link_url`. This does **not** cac
 	<a href="&mvt:my_var:link_url">&mvt:my_var:name;</a>
 <mvt:else>
 	<span>&mvt:my_var:name;</span>
+</mvt:if>
+```
+
+### Transient_ReadyTheme_ContentSection
+
+```javascript
+Transient_ReadyTheme_ContentSection( readytheme_code, expires, all_settings var )
+```
+**readytheme_code**: The ReadyTheme content section code you want to use
+**expires**: Expiration Date
+**all_settings var**: `l.settings` needs to be passed through
+
+**Example Syntax of Transient_ReadyTheme_ContentSection**
+```xml
+<mvt:do file="g.Module_Root $ '/modules/util/transients.mvc'" name="l.settings:about_us_section" value="Transient_ReadyTheme_ContentSection( 'about_us', 24*60*60, l.settings )" />
+<mvt:if expr="l.settings:about_us_section">
+	&mvt:about_us_section;
+<mvt:else>
+	<mvt:comment> <!-- Failsafe! --> </mvt:comment>
+	<mvt:item name="readytheme" param="contentsection( 'about_us' )" />
+</mvt:if>
+```
+
+**Need a dynamic key for your content section?**
+```javascript
+Transient_ReadyTheme_ContentSection( key, readytheme_code, expires, all_settings var )
+```
+```xml
+<mvt:do file="g.Module_Root $ '/modules/util/transients.mvc'" name="l.settings:customlogic" value="Transient_ReadyTheme_ContentSection_Lowlevel( l.settings:product:code $ '__customlogic', 'customlogic', 24*60*60, l.settings )" />
+<mvt:if expr="l.settings:customlogic">
+	&mvt:customlogic;
+<mvt:else>
+	<mvt:comment> <!-- Failsafe! --> </mvt:comment>
+	<mvt:item name="readytheme" param="contentsection( 'customlogic' )" />
 </mvt:if>
 ```

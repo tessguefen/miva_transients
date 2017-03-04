@@ -18,7 +18,9 @@ There are two simple functions you can use:
 - [Set_Transient](#set_transient)
 - [Get_Transient](#get_transient)
 
-### Setting a Transient<a name="set_transient"></a>
+<a name="set_transient"></a>
+
+### Setting a Transient
 
 ```javascript
 Set_Transient(key, value, expiration)
@@ -36,7 +38,9 @@ Set_Transient(key, value, expiration)
 <mvt:do file="g.Module_Root $ '/modules/util/transients.mvc'" name="l.set_transient" value="Set_Transient( 'recent_posts', l.settings:my_value_here, 60*60*2)" />
 ```
 
-### Getting a Transient<a name="get_transient"></a>
+<a name="get_transient"></a>
+
+### Getting a Transient
 
 ```javascript
 Get_Transient(key)
@@ -79,7 +83,9 @@ In Version 1.006 there are 4 new functions:
 - [Transient_Load_Link( item var )](#Transient_Load_Link)
 - [Transient_ReadyTheme_ContentSection( readytheme_code, expires, all_settings var )](#Transient_ReadyTheme_ContentSection)
 
-### Transient_ReadyTheme_NavigationSet<a name="Transient_ReadyTheme_NavigationSet"></a>
+<a name="Transient_ReadyTheme_NavigationSet"></a>
+
+### Transient_ReadyTheme_NavigationSet
 
 ```javascript
 Transient_ReadyTheme_NavigationSet( readytheme_code, expires )
@@ -115,7 +121,9 @@ Transient_ReadyTheme_NavigationSet_WithSettings( readytheme_code, expires, all_s
 </mvt:if>
 ```
 
-### Transient_Load_NavigationSet<a name="Transient_Load_NavigationSet"></a>
+<a name="Transient_Load_NavigationSet"></a>
+
+### Transient_Load_NavigationSet
 
 ```javascript
 Transient_Load_NavigationSet( readytheme_code )
@@ -133,7 +141,9 @@ This returns the ReadyTheme Navigation Set `l.settings:readytheme` variable, inc
 </mvt:if>
 ```
 
-### Transient_ReadyTheme_Image<a name="Transient_ReadyTheme_Image"></a>
+<a name="Transient_ReadyTheme_Image"></a>
+
+### Transient_ReadyTheme_Image
 
 ```javascript
 Transient_ReadyTheme_Image( readytheme_code, expires )
@@ -160,7 +170,9 @@ The variable contains the following:
 </mvt:if>
 ```
 
-### Transient_Load_Link<a name="Transient_Load_Link"></a>
+<a name="Transient_Load_Link"></a>
+
+### Transient_Load_Link
 
 ```javascript
 Transient_Load_Link( item var )
@@ -183,7 +195,9 @@ This returns the item, as well as `:link` and `:link_url`. This does **not** cac
 </mvt:if>
 ```
 
-### Transient_ReadyTheme_ContentSection<a name="Transient_ReadyTheme_ContentSection"></a>
+<a name="Transient_ReadyTheme_ContentSection"></a>
+
+### Transient_ReadyTheme_ContentSection
 
 **Please Note:** If you have custom logic that is outputting variables (i.e. g.show__breadcrumbs), this will not be cached/ output. This is best used when trying to display certain information.
 

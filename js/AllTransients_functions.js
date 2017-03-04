@@ -19,3 +19,13 @@ function AllTransients_Batchlist_Delete( tkey, callback, delegator ) {
 							'Transient_Key=' + encodeURIComponent( tkey ),
 							delegator );
 }
+
+// Delete All
+function AllTransients_Batchlist_Delete_All(callback) {
+	return AJAX_Call_Module( callback,
+							'admin',
+							'tg_transients',
+							'Delete_All_Transients',
+							'',
+							'' );
+}

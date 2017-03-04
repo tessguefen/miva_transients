@@ -3,6 +3,7 @@ function AllTransients_Batchlist() {
 	this.Feature_SearchBar_SetPlaceholderText( 'Search Transients...' );
 	this.SetDefaultSort( 'tkey', '' );
 	this.Feature_Delete_Enable('Delete Transient(s)');
+	//this.Feature_Buttons_AddButton_Persistent( 'Delete All Transients', 'Delete All Transients', 'delete', this.deleteAll );
 }
 
 DeriveFrom( MMBatchList, AllTransients_Batchlist );
@@ -25,3 +26,8 @@ AllTransients_Batchlist.prototype.onCreateRootColumnList = function() {
 AllTransients_Batchlist.prototype.onDelete = function( item, callback, delegator ) {
 	AllTransients_Batchlist_Delete( item.record.tkey, callback, delegator );
 }
+
+// AllTransients_Batchlist.prototype.deleteAll = function(){
+// 	var self = this;
+// 	AllTransients_Batchlist_Delete_All( self.Refresh() );
+// }

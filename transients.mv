@@ -2,7 +2,7 @@
 	<MvASSIGN NAME = "l.module:code"		VALUE = "tg_transients">
 	<MvASSIGN NAME = "l.module:name"		VALUE = "Transients">
 	<MvASSIGN NAME = "l.module:provider"	VALUE = "Tess Guefen">
-	<MvASSIGN NAME = "l.module:version"		VALUE = "1.006">
+	<MvASSIGN NAME = "l.module:version"		VALUE = "1.007">
 	<MvASSIGN NAME = "l.module:api_ver"		VALUE = "9.00">
 	<MvASSIGN NAME = "l.module:description"	VALUE = "Save Cached versions of data, set an expiration time, and be happy.">
 	<MvASSIGN NAME = "l.module:features"	VALUE = "util, vis_util, data_store, json, clientside">
@@ -149,6 +149,17 @@
 			}
 		</MvIF>
 	</MvIF>
+	<MvIF EXPR = "{ g.Module_Function EQ 'Delete_All_Transients' }">
+		<MvIF EXPR = "{ Delete_All_Transients() }">
+			{
+				"success": 1
+			}
+		<MvELSE>
+			{
+				"success": 0
+			}
+		</MvIF>
+	</MvIF>
 </MvFUNCTION>
 
 <MvCOMMENT>
@@ -162,8 +173,10 @@
 |	6.	Transient_ReadyTheme_Image( readytheme_code, expires )
 |	7.	Transient_Load_Link( item var )
 |	8.	Transient_ReadyTheme_ContentSection( readytheme_code, expires, all_settings var )
-|	9.	Delete_Transient( key )
-|	10. Batchlist_Transients
+|	9.	Transient_ReadyTheme_ContentSection_Lowlevel( key, readytheme_code, expires, all_settings var )
+|	10.	Delete_Transient( key )
+|	11. Batchlist_Transients( module var)
+|	12. Delete_All_Transients
 | ========================================================================================================================
 </MvCOMMENT>
 
@@ -241,7 +254,7 @@
 								(?, ?, ?)'}"
 			 	FIELDS = "l.key, l.value, l.expires">
 	<MvIF EXPR = "{ g.MvQUERY_Error }">
-		<MvFUNCTIONRETURN VALUE = "{ [ g.Module_Library_Utilities ].Error( 'QNA-MOD-2017', g.MvQUERY_Error ) }">
+		<MvFUNCTIONRETURN VALUE = "{ [ g.Module_Library_Utilities ].Error( 'TRANSIENTS-MOD-2001', g.MvQUERY_Error ) }">
 	</MvIF>
 
 	<MvFUNCTIONRETURN VALUE = 1 />
@@ -455,6 +468,10 @@
 	<MvASSIGN NAME = "l.readytheme_code"	VALUE = "{ trim( l.readytheme_code ) }">
 	<MvASSIGN NAME = "l.key" VALUE = "{ 'contentsection__' $ l.readytheme_code }">
 
+	<MvFUNCTIONRETURN VALUE = "{ Transient_ReadyTheme_ContentSection_Lowlevel( l.key, l.readytheme_code, l.expires, l.all_settings) }" />
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "Transient_ReadyTheme_ContentSection_Lowlevel" PARAMETERS = "key, readytheme_code, expires, all_settings var" STANDARDOUTPUTLEVEL = "" ERROROUTPUTLEVEL = "">
 	<MvIF EXPR = "{ NOT l.expires OR NOT l.readytheme_code }">
 		<MvFUNCTIONRETURN>
 	</MvIF>
@@ -535,4 +552,13 @@
 		}
 		<MvCLOSEVIEW NAME = "Merchant" VIEW = "Transients">
 	}
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "Delete_All_Transients" STANDARDOUTPUTLEVEL = "" ERROROUTPUTLEVEL = "">
+	<MvQUERY	NAME 	= "Merchant"
+				QUERY 	= "{ 'DELETE FROM ' $ g.Store_Table_Prefix $ 'Transients'}">
+	<MvIF EXPR = "{ g.MvQUERY_Error }">
+		<MvFUNCTIONRETURN VALUE = "{ [ g.Module_Library_Utilities ].Error( 'TRANSIENTS-MOD-2002', g.MvQUERY_Error ) }">
+	</MvIF>
+	<MvFUNCTIONRETURN VALUE = 1>
 </MvFUNCTION>

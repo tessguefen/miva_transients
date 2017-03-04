@@ -226,7 +226,7 @@ Transient_ReadyTheme_ContentSection( readytheme_code, expires, all_settings var 
 **When this would be useful:** Why not load all your customfield information through a content section, and save the **rendered* HTML instead?
 
 ```javascript
-Transient_ReadyTheme_ContentSection( key, readytheme_code, expires, all_settings var )
+Transient_ReadyTheme_ContentSection_LowLevel( key, readytheme_code, expires, all_settings var )
 ```
 **Example Syntax of Transient_ReadyTheme_ContentSection_Lowlevel (v1.007)**
 ```xml

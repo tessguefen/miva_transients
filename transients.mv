@@ -207,10 +207,12 @@
 					FIELDS	= "l.key">
 
 	<MvIF EXPR = "{ g.MvOPENVIEW_Error }">
+		<MvCLOSEVIEW NAME = "Merchant" VIEW = "GetTransients">
 		<MvFUNCTIONRETURN VALUE = "{ [ g.Module_Library_Utilities ].Error( 'TRANSIENTS-MOD-2000:', 'An error occurred while retrieving the requestest Transient.' ) }">
 	</MvIF>
 
 	<MvIF EXPR = "{ GetTransients.d.EOF }">
+		<MvCLOSEVIEW NAME = "Merchant" VIEW = "GetTransients">
 		<MvFUNCTIONRETURN VALUE = "{ [ g.Module_Library_DB ].Error_Load_EOF( '#Error# Could Not Find KEY' ) }">
 	</MvIF>
 

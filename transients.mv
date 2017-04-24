@@ -634,13 +634,7 @@
 </MvFUNCTION>
 
 <MvFUNCTION NAME = "ScheduledTaskModule_Prompt" PARAMETERS = "module var, field_id" STANDARDOUTPUTLEVEL = "">
-	<MvASSIGN NAME = "l.prompt" 		VALUE = "">
-
-	<MvIF EXPR = "{ l.field_id EQ 'call_url_field' }">
-		<MvASSIGN NAME = "l.prompt" 	VALUE = "<b>URL to Hit:</b>">
-	</MvIF>
-
-	<MvFUNCTIONRETURN VALUE = "{ l.prompt }">
+	<MvFUNCTIONRETURN VALUE = "">
 </MvFUNCTION>
 
 <MvFUNCTION NAME = "ScheduledTaskModule_Field" PARAMETERS = "module var, field_id" STANDARDOUTPUTLEVEL = "text, html, compresswhitespace">

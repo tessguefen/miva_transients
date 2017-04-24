@@ -3,7 +3,8 @@ function AllTransients_Batchlist() {
 	this.Feature_SearchBar_SetPlaceholderText( 'Search Transients...' );
 	this.SetDefaultSort( 'tkey', '' );
 	this.Feature_Delete_Enable('Delete Transient(s)');
-	//this.Feature_Buttons_AddButton_Persistent( 'Delete All Transients', 'Delete All Transients', 'delete', this.deleteAll );
+	this.Feature_Buttons_AddButton_Persistent( 'Delete All', 'Delete All', 'delete', this.deleteAll );
+	this.Feature_Buttons_AddButton_Persistent( 'Delete Expired', 'Delete Expired', 'delete', this.deleteExpired );
 }
 
 DeriveFrom( MMBatchList, AllTransients_Batchlist );
@@ -27,7 +28,12 @@ AllTransients_Batchlist.prototype.onDelete = function( item, callback, delegator
 	AllTransients_Batchlist_Delete( item.record.tkey, callback, delegator );
 }
 
-// AllTransients_Batchlist.prototype.deleteAll = function(){
-// 	var self = this;
-// 	AllTransients_Batchlist_Delete_All( self.Refresh() );
-// }
+AllTransients_Batchlist.prototype.deleteAll = function(){
+	var self = this;
+	AllTransients_Batchlist_Delete_All( function( response ) { self.Refresh(); } );
+}
+
+AllTransients_Batchlist.prototype.deleteExpired = function(){
+	var self = this;
+	AllTransients_Batchlist_Delete_Expired( function( response ) { self.Refresh(); } );
+}

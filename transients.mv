@@ -2,10 +2,10 @@
 	<MvASSIGN NAME = "l.module:code"		VALUE = "tg_transients">
 	<MvASSIGN NAME = "l.module:name"		VALUE = "Transients">
 	<MvASSIGN NAME = "l.module:provider"	VALUE = "Tess Guefen">
-	<MvASSIGN NAME = "l.module:version"		VALUE = "1.008">
+	<MvASSIGN NAME = "l.module:version"		VALUE = "1.009">
 	<MvASSIGN NAME = "l.module:api_ver"		VALUE = "9.00">
 	<MvASSIGN NAME = "l.module:description"	VALUE = "Save Cached versions of data, set an expiration time, and be happy.">
-	<MvASSIGN NAME = "l.module:features"	VALUE = "util, vis_util, data_store, json, clientside">
+	<MvASSIGN NAME = "l.module:features"	VALUE = "util, vis_util, data_store, json, clientside, scheduledtask">
 </MvFUNCTION>
 
 <MvCOMMENT>
@@ -160,6 +160,17 @@
 			}
 		</MvIF>
 	</MvIF>
+	<MvIF EXPR = "{ g.Module_Function EQ 'Delete_Expired_Transients' }">
+		<MvIF EXPR = "{ Delete_Expired_Transients() }">
+			{
+				"success": 1
+			}
+		<MvELSE>
+			{
+				"success": 0
+			}
+		</MvIF>
+	</MvIF>
 </MvFUNCTION>
 
 <MvCOMMENT>
@@ -176,7 +187,8 @@
 |	9.	Transient_ReadyTheme_ContentSection_Lowlevel( key, readytheme_code, expires, all_settings var )
 |	10.	Delete_Transient( key )
 |	11. Batchlist_Transients( module var)
-|	12. Delete_All_Transients
+|	12. Delete_All_Transients()
+|	13. Delete_Expired_Transients()
 | ========================================================================================================================
 </MvCOMMENT>
 
@@ -283,10 +295,13 @@
 	</MvIF>
 
 	<MvIF EXPR = "{ [ g.Module_Feature_TUI_DB ].ManagedTemplate_Load_ID( l.navigationset:templ_id, l.navigationset_template ) }">
+		<MvASSIGN NAME = "l.readytheme_prev" VALUE = "{ l.all_settings:readytheme }">
 		<MvASSIGN NAME = "l.all_settings:readytheme" VALUE = "{ l.navigationset }">
 
 		<MvCAPTURE VARIABLE = "l.return"><MvEVAL EXPR = "{ [ g.Store_Template_Path $ l.navigationset_template:filename ].Template_Render( l.settings, l.all_settings ) }"></MvCAPTURE>
 	</MvIF>
+
+	<MvASSIGN NAME = "l.all_settings:readytheme" VALUE = "{ l.readytheme_prev }">
 
 	<MvIF EXPR = "{ Set_Transient( l.key, l.return, l.expires )  }">
 		<MvFUNCTIONRETURN VALUE = "{ l.return }">
@@ -316,10 +331,13 @@
 	</MvIF>
 
 	<MvIF EXPR = "{ [ g.Module_Feature_TUI_DB ].ManagedTemplate_Load_ID( l.navigationset:templ_id, l.navigationset_template ) }">
+		<MvASSIGN NAME = "l.readytheme_prev" VALUE = "{ l.all_settings:readytheme }">
 		<MvASSIGN NAME = "l.all_settings:readytheme" VALUE = "{ l.navigationset }">
 
 		<MvCAPTURE VARIABLE = "l.return"><MvEVAL EXPR = "{ [ g.Store_Template_Path $ l.navigationset_template:filename ].Template_Render( l.null, l.all_settings ) }"></MvCAPTURE>
 	</MvIF>
+
+	<MvASSIGN NAME = "l.all_settings:readytheme" VALUE = "{ l.readytheme_prev }">
 
 	<MvIF EXPR = "{ Set_Transient( l.key, l.return, l.expires )  }">
 		<MvFUNCTIONRETURN VALUE = "{ l.return }">
@@ -574,5 +592,84 @@
 	<MvIF EXPR = "{ g.MvQUERY_Error }">
 		<MvFUNCTIONRETURN VALUE = "{ [ g.Module_Library_Utilities ].Error( 'TRANSIENTS-MOD-2002', g.MvQUERY_Error ) }">
 	</MvIF>
+	<MvFUNCTIONRETURN VALUE = 1>
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "Delete_Expired_Transients" STANDARDOUTPUTLEVEL = "" ERROROUTPUTLEVEL = "">
+	<MvQUERY	NAME 	= "Merchant"
+				QUERY 	= "{ 'DELETE FROM ' $ g.Store_Table_Prefix $ 'Transients WHERE expires < ?'}"
+				FIELDS	= "s.dyn_time_t">
+	<MvIF EXPR = "{ g.MvQUERY_Error }">
+		<MvFUNCTIONRETURN VALUE = "{ [ g.Module_Library_Utilities ].Error( 'TRANSIENTS-MOD-2003', g.MvQUERY_Error ) }">
+	</MvIF>
+	<MvFUNCTIONRETURN VALUE = 1>
+</MvFUNCTION>
+
+
+<MvCOMMENT>
+=== SCHEDULED TASK PARAMETERS
+</MvCOMMENT>
+
+<MvFUNCTION NAME = "ScheduledTaskModule_Capabilities" PARAMETERS = "module var, capabilities var" STANDARDOUTPUTLEVEL = "">
+	<MvASSIGN NAME = "l.capabilities:provision_settings" VALUE = 0>
+	<MvASSIGN NAME = "l.capabilities:provision" VALUE = 0>
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "ScheduledTaskModule_Operations" PARAMETERS = "module var, operations var" STANDARDOUTPUTLEVEL = "">
+	<MvASSIGN NAME = "l.operations" INDEX = "1" MEMBER = "code"		VALUE = "all">
+	<MvASSIGN NAME = "l.operations" INDEX = "1" MEMBER = "descrip"	VALUE = "Delete All Transients">
+	<MvASSIGN NAME = "l.operations" INDEX = "2" MEMBER = "code"		VALUE = "expired">
+	<MvASSIGN NAME = "l.operations" INDEX = "2" MEMBER = "descrip"	VALUE = "Delete Expired Transients">
+
+	<MvFUNCTIONRETURN VALUE = 2>
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "ScheduledTaskModule_Fields" PARAMETERS = "module var, task var" STANDARDOUTPUTLEVEL = "">
+	<MvASSIGN NAME = "l.fields" VALUE = "">
+	<MvFUNCTIONRETURN VALUE = "{ l.fields }">
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "ScheduledTaskModule_Invalid" PARAMETERS = "module var, field_id" STANDARDOUTPUTLEVEL = "">
+	<MvFUNCTIONRETURN VALUE = 0>
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "ScheduledTaskModule_Prompt" PARAMETERS = "module var, field_id" STANDARDOUTPUTLEVEL = "">
+	<MvASSIGN NAME = "l.prompt" 		VALUE = "">
+
+	<MvIF EXPR = "{ l.field_id EQ 'call_url_field' }">
+		<MvASSIGN NAME = "l.prompt" 	VALUE = "<b>URL to Hit:</b>">
+	</MvIF>
+
+	<MvFUNCTIONRETURN VALUE = "{ l.prompt }">
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "ScheduledTaskModule_Field" PARAMETERS = "module var, field_id" STANDARDOUTPUTLEVEL = "text, html, compresswhitespace">
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "ScheduledTaskModule_Validate" PARAMETERS = "module var, task var" STANDARDOUTPUTLEVEL = "">
+	<MvFUNCTIONRETURN VALUE = 1>
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "ScheduledTaskModule_Update" PARAMETERS = "module var, task var" STANDARDOUTPUTLEVEL = "">
+	<MvFUNCTIONRETURN VALUE = 1>
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "ScheduledTaskModule_Delete" PARAMETERS = "module var, task var" STANDARDOUTPUTLEVEL = "">
+	<MvFUNCTIONRETURN VALUE = 1>
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "ScheduledTaskModule_Execute" PARAMETERS = "module var, task var" STANDARDOUTPUTLEVEL = "">
+	<MvIF EXPR = "{ l.task:operation EQ 'all' }">
+		<MvFUNCTIONRETURN VALUE = "{ Delete_All_Transients() }">
+	</MvIF>
+
+	<MvIF EXPR = "{ l.task:operation EQ 'expired' }">
+		<MvFUNCTIONRETURN VALUE = "{ Delete_Expired_Transients() }">
+	</MvIF>
+
+	<MvFUNCTIONRETURN VALUE = "{ [ g.Module_Library_Utilities ].Error( 'TRANSIENTS-MOD-3000', 'Unsupported operation' ) }">
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "ScheduledTaskModule_Provision_Settings" PARAMETERS = "module var, task var, provide_xml var" STANDARDOUTPUTLEVEL = "">
 	<MvFUNCTIONRETURN VALUE = 1>
 </MvFUNCTION>

@@ -21,11 +21,21 @@ function AllTransients_Batchlist_Delete( tkey, callback, delegator ) {
 }
 
 // Delete All
-function AllTransients_Batchlist_Delete_All(callback) {
+function AllTransients_Batchlist_Delete_All( callback ) {
 	return AJAX_Call_Module( callback,
 							'admin',
 							'tg_transients',
 							'Delete_All_Transients',
+							'',
+							'' );
+}
+
+// Delete Expired
+function AllTransients_Batchlist_Delete_Expired( callback ) {
+	return AJAX_Call_Module( callback,
+							'admin',
+							'tg_transients',
+							'Delete_Expired_Transients',
 							'',
 							'' );
 }

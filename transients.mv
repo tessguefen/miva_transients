@@ -625,8 +625,7 @@
 </MvFUNCTION>
 
 <MvFUNCTION NAME = "ScheduledTaskModule_Fields" PARAMETERS = "module var, task var" STANDARDOUTPUTLEVEL = "">
-	<MvASSIGN NAME = "l.fields" VALUE = "">
-	<MvFUNCTIONRETURN VALUE = "{ l.fields }">
+	<MvFUNCTIONRETURN VALUE = "">
 </MvFUNCTION>
 
 <MvFUNCTION NAME = "ScheduledTaskModule_Invalid" PARAMETERS = "module var, field_id" STANDARDOUTPUTLEVEL = "">

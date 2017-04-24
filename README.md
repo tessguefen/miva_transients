@@ -2,6 +2,8 @@
 
 **Current Version 1.008**
 
+_Version 1.009 in TEST MODE_
+
 A Transient is a simple way of storing cached data in the database temporarily, by giving it a custom name and a timeframe after which it will expire and be deleted.
 
 Transients are useful when pinging another API (i.e. Wordpress, Instagram, twitter), and saving data for a set period of time.

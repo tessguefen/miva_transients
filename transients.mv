@@ -2,7 +2,7 @@
 	<MvASSIGN NAME = "l.module:code"		VALUE = "tg_transients">
 	<MvASSIGN NAME = "l.module:name"		VALUE = "Transients">
 	<MvASSIGN NAME = "l.module:provider"	VALUE = "Tess Guefen">
-	<MvASSIGN NAME = "l.module:version"		VALUE = "1.009">
+	<MvASSIGN NAME = "l.module:version"		VALUE = "1.010">
 	<MvASSIGN NAME = "l.module:api_ver"		VALUE = "9.00">
 	<MvASSIGN NAME = "l.module:description"	VALUE = "Save Cached versions of data, set an expiration time, and be happy.">
 	<MvASSIGN NAME = "l.module:features"	VALUE = "util, vis_util, data_store, json, clientside, scheduledtask">
@@ -135,40 +135,31 @@
 </MvCOMMENT>
 
 <MvFUNCTION NAME = "Module_JSON" PARAMETERS = "module var" STANDARDOUTPUTLEVEL = "text, compresswhitespace">
+	<MvIF EXPR = "{ NOT [ g.Module_JSON ].JSON_Store_Open() }">
+		<MvFUNCTIONRETURN>
+	</MvIF>
 	<MvIF EXPR = "{ g.Module_Function EQ 'AllTransients_Load_Query' }">
 		<MvEVAL EXPR = "{ Batchlist_Transients( l.module) }">
 	</MvIF>
 	<MvIF EXPR = "{ g.Module_Function EQ 'Delete_Transient' }">
 		<MvIF EXPR = "{ Delete_Transient( trim( g.Transient_Key ) ) }">
-			{
-				"success": 1
-			}
+			<MvFUNCTIONRETURN VALUE = "{ [ g.Module_JSON ].JSON_Response_Success() }">
 		<MvELSE>
-			{
-				"success": 0
-			}
+			<MvFUNCTIONRETURN VALUE = "{ [ g.Module_JSON ].JSON_Response_FieldError( 'tkey', 'An Error Occurred.' ) }">
 		</MvIF>
 	</MvIF>
 	<MvIF EXPR = "{ g.Module_Function EQ 'Delete_All_Transients' }">
 		<MvIF EXPR = "{ Delete_All_Transients() }">
-			{
-				"success": 1
-			}
+			<MvFUNCTIONRETURN VALUE = "{ [ g.Module_JSON ].JSON_Response_Success() }">
 		<MvELSE>
-			{
-				"success": 0
-			}
+			<MvFUNCTIONRETURN VALUE = "{ [ g.Module_JSON ].JSON_Response_Error( 'TRANSIENDS-JSON-0001', 'An Error Occurred.' ) }">
 		</MvIF>
 	</MvIF>
 	<MvIF EXPR = "{ g.Module_Function EQ 'Delete_Expired_Transients' }">
 		<MvIF EXPR = "{ Delete_Expired_Transients() }">
-			{
-				"success": 1
-			}
+			<MvFUNCTIONRETURN VALUE = "{ [ g.Module_JSON ].JSON_Response_Success() }">
 		<MvELSE>
-			{
-				"success": 0
-			}
+			<MvFUNCTIONRETURN VALUE = "{ [ g.Module_JSON ].JSON_Response_Error( 'TRANSIENDS-JSON-0002', 'An Error Occurred.' ) }">
 		</MvIF>
 	</MvIF>
 </MvFUNCTION>
@@ -209,13 +200,7 @@
 <MvFUNCTION NAME = "Get_Transient_LowLevel" PARAMETERS = "key, output var" STANDARDOUTPUTLEVEL = "" ERROROUTPUTLEVEL = "">
 	<MvOPENVIEW	NAME	= "Merchant"
 					VIEW 	= "GetTransients"
-					QUERY 	= "{ 'SELECT
-									*
-								FROM ' $
-									g.Store_Table_Prefix $ 'Transients
-								WHERE
-									tkey = ?'
-								}"
+					QUERY 	= "{ 'SELECT * FROM ' $ g.Store_Table_Prefix $ 'Transients WHERE tkey = ?' }"
 					FIELDS	= "l.key">
 
 	<MvIF EXPR = "{ g.MvOPENVIEW_Error }">

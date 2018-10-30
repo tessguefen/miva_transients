@@ -1,12 +1,14 @@
 # Transients
 
-**Current Version 1.010**
+**Current Version 1.011**
 
 A Transient is a simple way of storing cached data in the database temporarily, by giving it a custom name and a timeframe after which it will expire and be deleted.
 
 Transients are useful when pinging another API (i.e. Wordpress, Instagram, twitter), and saving data for a set period of time.
 
 Once the module is installed, you will find a tab under **Utilities**. This batch list is used for debugging, viewing transients, and deleting transients.
+
+XML Provisioning for deleted transients is supported in v1.011.
 
 ## Please Note
 
@@ -237,4 +239,29 @@ Transient_ReadyTheme_ContentSection_LowLevel( key, readytheme_code, expires, all
 	<mvt:comment> <!-- Failsafe! --> </mvt:comment>
 	<mvt:item name="readytheme" param="contentsection( 'customlogic' )" />
 </mvt:if>
+```
+
+## XML Provisioning
+
+
+### Delete a specific Transient
+```xml
+<Module code="tg_transients" feature="util">
+	<Delete_Transient key="my_key_here" />
+	<Delete_Transient key="my_other_key_here" />
+</Module>
+```
+
+### Delete All Transients
+```xml
+<Module code="tg_transients" feature="util">
+	<Delete_All_Transients />
+</Module>
+```
+
+### Delete Expired Transients
+```xml
+<Module code="tg_transients" feature="util">
+	<Delete_Expired_Transients />
+</Module>
 ```

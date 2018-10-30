@@ -2,10 +2,10 @@
 	<MvASSIGN NAME = "l.module:code"		VALUE = "tg_transients">
 	<MvASSIGN NAME = "l.module:name"		VALUE = "Transients">
 	<MvASSIGN NAME = "l.module:provider"	VALUE = "Tess Guefen">
-	<MvASSIGN NAME = "l.module:version"		VALUE = "1.010">
+	<MvASSIGN NAME = "l.module:version"		VALUE = "1.011">
 	<MvASSIGN NAME = "l.module:api_ver"		VALUE = "9.00">
 	<MvASSIGN NAME = "l.module:description"	VALUE = "Save Cached versions of data, set an expiration time, and be happy.">
-	<MvASSIGN NAME = "l.module:features"	VALUE = "util, vis_util, data_store, json, clientside, scheduledtask">
+	<MvASSIGN NAME = "l.module:features"	VALUE = "util, vis_util, data_store, json, clientside, scheduledtask, provision_store">
 </MvFUNCTION>
 
 <MvCOMMENT>
@@ -165,6 +165,26 @@
 </MvFUNCTION>
 
 <MvCOMMENT>
+| ====================================================================================
+|	provision_store
+| ====================================================================================
+</MvCOMMENT>
+
+<MvFUNCTION NAME = "Module_Provision_Store" PARAMETERS = "module var, provide_xml var" STANDARDOUTPUTLEVEL = "">
+	<MvFOREACH ITERATOR = "l.child_xml" ARRAY = "l.provide_xml:children">
+		<MvASSIGN NAME = "l.name"		VALUE = "{ tolower( l.child_xml:name ) }">
+
+		<MvIF EXPR = "{ l.name EQ 'delete_transient' }">
+			<MvEVAL EXPR = "{ Module_Provision_Delete_Transient( l.module, l.child_xml ) }">
+		<MvELSEIF EXPR = "{ l.name EQ 'delete_all_transients'}">
+			<MvEVAL EXPR = "{ Module_Provision_Delete_All_Transients( l.module ) }">
+		<MvELSEIF EXPR = "{ l.name EQ 'delete_expired_transients'}">
+			<MvEVAL EXPR = "{ Module_Provision_Delete_Expired_Transients( l.module ) }">
+		</MvIF>
+	</MvFOREACH>
+</MvFUNCTION>
+
+<MvCOMMENT>
 | ========================================================================================================================
 |	MODULE FUNCTIONS
 |	1.	Get_Transient( key )
@@ -180,6 +200,9 @@
 |	11. Batchlist_Transients( module var)
 |	12. Delete_All_Transients()
 |	13. Delete_Expired_Transients()
+|	14.	Module_Provision_Delete_Transient( module var, provide_xml var )
+|	15.	Module_Provision_Delete_All_Transients( module var )
+|	16.	Module_Provision_Delete_Expired_Transients( module var )
 | ========================================================================================================================
 </MvCOMMENT>
 
@@ -588,6 +611,40 @@
 		<MvFUNCTIONRETURN VALUE = "{ [ g.Module_Library_Utilities ].Error( 'TRANSIENTS-MOD-2003', g.MvQUERY_Error ) }">
 	</MvIF>
 	<MvFUNCTIONRETURN VALUE = 1>
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "Module_Provision_Delete_Transient" PARAMETERS = "module var, provide_xml var" STANDARDOUTPUTLEVEL = "">
+	<MvCOMMENT>
+		<Delete_Transient key="my_key_here" />
+	</MvCOMMENT>
+
+	<MvIF EXPR = "{ NOT [ g.Module_Feature_PRV_AD ].PRV_Attribute_Text( l.provide_xml, 'key', l.key ) }">
+		<MvFUNCTIONRETURN />
+	</MvIF>
+
+	<MvIF EXPR = "{ NOT Delete_Transient( l.key ) }">
+		<MvFUNCTIONRETURN VALUE = "{ [ g.Module_Feature_PRV_AD ].PRV_LogMessage( l.provide_xml, 'Error - Transient Not Deleted.' ) }">
+	</MvIF>
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "Module_Provision_Delete_All_Transients" PARAMETERS = "module var" STANDARDOUTPUTLEVEL = "">
+	<MvCOMMENT>
+		<Delete_All_Transients />
+	</MvCOMMENT>
+
+	<MvIF EXPR = "{ NOT Delete_All_Transients() }">
+		<MvFUNCTIONRETURN VALUE = "{ [ g.Module_Feature_PRV_AD ].PRV_LogMessage( l.provide_xml, 'Error - Transients Not Deleted.' ) }">
+	</MvIF>
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "Module_Provision_Delete_Expired_Transients" PARAMETERS = "module var" STANDARDOUTPUTLEVEL = "">
+	<MvCOMMENT>
+		<Delete_Expired_Transients />
+	</MvCOMMENT>
+
+	<MvIF EXPR = "{ NOT Delete_Expired_Transients() }">
+		<MvFUNCTIONRETURN VALUE = "{ [ g.Module_Feature_PRV_AD ].PRV_LogMessage( l.provide_xml, 'Error - Expired Transients Not Deleted.' ) }">
+	</MvIF>
 </MvFUNCTION>
 
 

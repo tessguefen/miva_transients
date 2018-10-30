@@ -8,7 +8,7 @@ Transients are useful when pinging another API (i.e. Wordpress, Instagram, twitt
 
 Once the module is installed, you will find a tab under **Utilities**. This batch list is used for debugging, viewing transients, and deleting transients.
 
-[XML Provisioning](#xml_provisioning) for deleted transients is supported in v1.011.
+[XML Provisioning](#xml_provisioning) for deleting transients is supported in v1.011.
 
 ## Please Note
 

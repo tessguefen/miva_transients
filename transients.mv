@@ -3,9 +3,15 @@
 	<MvASSIGN NAME = "l.module:name"		VALUE = "Transients">
 	<MvASSIGN NAME = "l.module:provider"	VALUE = "Tess Guefen">
 	<MvASSIGN NAME = "l.module:version"		VALUE = "1.011">
+	<MvCOMMENT>
+	<MvASSIGN NAME = "l.module:version"		VALUE = "1.012">
+	</MvCOMMENT>
 	<MvASSIGN NAME = "l.module:api_ver"		VALUE = "9.00">
 	<MvASSIGN NAME = "l.module:description"	VALUE = "Save Cached versions of data, set an expiration time, and be happy.">
 	<MvASSIGN NAME = "l.module:features"	VALUE = "util, vis_util, data_store, json, clientside, scheduledtask, provision_store">
+	<MvCOMMENT>
+	<MvASSIGN NAME = "l.module:features"	VALUE = "util, vis_util, data_store, json, clientside, scheduledtask, provision_store, json_api">
+	</MvCOMMENT>
 </MvFUNCTION>
 
 <MvCOMMENT>
@@ -152,21 +158,21 @@
 		<MvIF EXPR = "{ Delete_All_Transients() }">
 			<MvFUNCTIONRETURN VALUE = "{ [ g.Module_JSON ].JSON_Response_Success() }">
 		<MvELSE>
-			<MvFUNCTIONRETURN VALUE = "{ [ g.Module_JSON ].JSON_Response_Error( 'TRANSIENDS-JSON-0001', 'An Error Occurred.' ) }">
+			<MvFUNCTIONRETURN VALUE = "{ [ g.Module_JSON ].JSON_Response_Error( 'TRANSIENTS-JSON-0001', 'An Error Occurred.' ) }">
 		</MvIF>
 	</MvIF>
 	<MvIF EXPR = "{ g.Module_Function EQ 'Delete_Expired_Transients' }">
 		<MvIF EXPR = "{ Delete_Expired_Transients() }">
 			<MvFUNCTIONRETURN VALUE = "{ [ g.Module_JSON ].JSON_Response_Success() }">
 		<MvELSE>
-			<MvFUNCTIONRETURN VALUE = "{ [ g.Module_JSON ].JSON_Response_Error( 'TRANSIENDS-JSON-0002', 'An Error Occurred.' ) }">
+			<MvFUNCTIONRETURN VALUE = "{ [ g.Module_JSON ].JSON_Response_Error( 'TRANSIENTS-JSON-0002', 'An Error Occurred.' ) }">
 		</MvIF>
 	</MvIF>
 </MvFUNCTION>
 
 <MvCOMMENT>
 | ====================================================================================
-|	provision_store
+|	PROVISION_STORE
 | ====================================================================================
 </MvCOMMENT>
 
@@ -182,6 +188,22 @@
 			<MvEVAL EXPR = "{ Module_Provision_Delete_Expired_Transients( l.module ) }">
 		</MvIF>
 	</MvFOREACH>
+</MvFUNCTION>
+
+<MvCOMMENT>
+| ====================================================================================
+|	JSON_API
+| ====================================================================================
+</MvCOMMENT>
+
+<MvFUNCTION NAME = "Module_JSON_API" PARAMETERS = "module var, function" STANDARDOUTPUTLEVEL = "">
+	<MvASSIGN NAME = "l.void" VALUE = "{ miva_output_header( 'Content-Type', 'application/json' ) }" >
+	<MvIF EXPR = "{ l.function EQ 'Delete_Transient' }">				<MvFUNCTIONRETURN VALUE = "{ JSON_API_Delete_Transient( l.module ) }">
+	<MvELSEIF EXPR = "{ l.function EQ 'Delete_All_Transients' }">		<MvFUNCTIONRETURN VALUE = "{ JSON_API_Delete_All_Transients( l.module ) }">
+	<MvELSEIF EXPR = "{ l.function EQ 'Delete_Expired_Transients' }">	<MvFUNCTIONRETURN VALUE = "{ JSON_API_Delete_Expired_Transients( l.module ) }">
+	</MvIF>
+
+	<MvFUNCTIONRETURN VALUE = "{ [ g.Module_JSON ].JSON_Response_Error( 'TRANSIENTS-ERROR-0001', 'Invalid function.' ) }">
 </MvFUNCTION>
 
 <MvCOMMENT>
@@ -203,6 +225,9 @@
 |	14.	Module_Provision_Delete_Transient( module var, provide_xml var )
 |	15.	Module_Provision_Delete_All_Transients( module var )
 |	16.	Module_Provision_Delete_Expired_Transients( module var )
+|	17.	JSON_API_Delete_Transient( module var )
+|	18.	JSON_API_Delete_All_Transients( module var )
+|	19. JSON_API_Delete_Expired_Transients( module var )
 | ========================================================================================================================
 </MvCOMMENT>
 
@@ -645,6 +670,30 @@
 	<MvIF EXPR = "{ NOT Delete_Expired_Transients() }">
 		<MvFUNCTIONRETURN VALUE = "{ [ g.Module_Feature_PRV_AD ].PRV_LogMessage( l.provide_xml, 'Error - Expired Transients Not Deleted.' ) }">
 	</MvIF>
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "JSON_API_Delete_Transient" PARAMETERS = "module var" STANDARDOUTPUTLEVEL = "">
+	<MvCOMMENT>
+		--- How do you access the request
+		<MvIF EXPR = "{ Delete_Transient( trim( [[ KEY HERE ]] ) ) }">
+			<MvFUNCTIONRETURN VALUE = "{ [ g.Module_JSON ].JSON_Response_Success() }">
+		</MvIF>
+	</MvCOMMENT>
+	<MvFUNCTIONRETURN VALUE = "{ [ g.Module_JSON ].JSON_Response_Error( 'TRANSIENTS-JSON-ERROR-0002', 'Transient not deleted.' ) }">
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "JSON_API_Delete_All_Transients" PARAMETERS = "module var" STANDARDOUTPUTLEVEL = "">
+	<MvIF EXPR = "{ Delete_All_Transients() }">
+		<MvFUNCTIONRETURN VALUE = "{ [ g.Module_JSON ].JSON_Response_Success() }">
+	</MvIF>
+	<MvFUNCTIONRETURN VALUE = "{ [ g.Module_JSON ].JSON_Response_Error( 'TRANSIENTS-JSON-ERROR-0003', 'Transients not deleted.' ) }">
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "JSON_API_Delete_Expired_Transients" PARAMETERS = "module var" STANDARDOUTPUTLEVEL = "">
+	<MvIF EXPR = "{ Delete_Expired_Transients() }">
+		<MvFUNCTIONRETURN VALUE = "{ [ g.Module_JSON ].JSON_Response_Success() }">
+	</MvIF>
+	<MvFUNCTIONRETURN VALUE = "{ [ g.Module_JSON ].JSON_Response_Error( 'TRANSIENTS-JSON-ERROR-0004', 'Expired Transients not deleted.' ) }">
 </MvFUNCTION>
 
 

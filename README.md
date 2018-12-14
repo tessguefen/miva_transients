@@ -1,6 +1,6 @@
 # Transients
 
-**Current Version 1.011**
+**Current Version 1.012**
 
 A Transient is a simple way of storing cached data in the database temporarily, by giving it a custom name and a timeframe after which it will expire and be deleted.
 
@@ -9,6 +9,8 @@ Transients are useful when pinging another API (i.e. Wordpress, Instagram, twitt
 Once the module is installed, you will find a tab under **Utilities**. This batch list is used for debugging, viewing transients, and deleting transients.
 
 [XML Provisioning](#xml_provisioning) for deleting transients is supported in v1.011.
+
+[Miva JSON API](#json_api) for deleted transients is supported in v1.012.
 
 ## Please Note
 
@@ -266,4 +268,39 @@ Transient_ReadyTheme_ContentSection_LowLevel( key, readytheme_code, expires, all
 <Module code="tg_transients" feature="util">
 	<Delete_Expired_Transients />
 </Module>
+```
+
+## Miva JSON API
+Make sure your API User has access to **Store Utility Settings** > Delete, or access will be denied.
+<a name="json_api"></a>
+
+### Delete a specific Transient
+```json
+{
+	"Store_Code": "YOUR_STORE_CODE_HERE",
+	"Function": "Module",
+	"Module_Code": "tg_transients",
+	"Module_Function": "Delete_Transient",
+	"Code": "TRANSIENT_CODE_HERE"
+}
+```
+
+### Delete All Transients
+```json
+{
+	"Store_Code": "YOUR_STORE_CODE_HERE",
+	"Function": "Module",
+	"Module_Code": "tg_transients",
+	"Module_Function": "Delete_All_Transients"
+}
+```
+
+### Delete Expired Transients
+```json
+{
+	"Store_Code": "YOUR_STORE_CODE_HERE",
+	"Function": "Module",
+	"Module_Code": "tg_transients",
+	"Module_Function": "Delete_Expired_Transients"
+}
 ```

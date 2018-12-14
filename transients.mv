@@ -2,16 +2,10 @@
 	<MvASSIGN NAME = "l.module:code"		VALUE = "tg_transients">
 	<MvASSIGN NAME = "l.module:name"		VALUE = "Transients">
 	<MvASSIGN NAME = "l.module:provider"	VALUE = "Tess Guefen">
-	<MvASSIGN NAME = "l.module:version"		VALUE = "1.011">
-	<MvCOMMENT>
 	<MvASSIGN NAME = "l.module:version"		VALUE = "1.012">
-	</MvCOMMENT>
-	<MvASSIGN NAME = "l.module:api_ver"		VALUE = "9.00">
+	<MvASSIGN NAME = "l.module:api_ver"		VALUE = "9.12">
 	<MvASSIGN NAME = "l.module:description"	VALUE = "Save Cached versions of data, set an expiration time, and be happy.">
-	<MvASSIGN NAME = "l.module:features"	VALUE = "util, vis_util, data_store, json, clientside, scheduledtask, provision_store">
-	<MvCOMMENT>
 	<MvASSIGN NAME = "l.module:features"	VALUE = "util, vis_util, data_store, json, clientside, scheduledtask, provision_store, json_api">
-	</MvCOMMENT>
 </MvFUNCTION>
 
 <MvCOMMENT>
@@ -20,7 +14,7 @@
 | ========================================================================================================================
 </MvCOMMENT>
 
-<MvFUNCTION NAME = "Module_Install_Store" PARAMETERS = "module var" STANDARDOUTPUTLEVEL = "text, html, compresswhitespace">
+<MvFUNCTION NAME = "Module_Install_Store" PARAMETERS = "module var" STANDARDOUTPUTLEVEL = "">
 	<MvCOMMENT>
 	===========================
 	Create Transients Table
@@ -62,19 +56,27 @@
 | ========================================================================================================================
 </MvCOMMENT>
 
-<MvFUNCTION NAME = "StoreUtilityModule_Action" PARAMETERS = "module var" STANDARDOUTPUTLEVEL = "text, html, compresswhitespace">
+<MvFUNCTION NAME = "StoreUtilityModule_Action" PARAMETERS = "module var" STANDARDOUTPUTLEVEL = "">
 	<MvFUNCTIONRETURN VALUE = 1 />
 </MvFUNCTION>
 
-<MvFUNCTION NAME = "StoreUtilityModule_LeftNavigation" PARAMETERS = "module var, ident" STANDARDOUTPUTLEVEL = "compresswhitespace">
+<MvFUNCTION NAME = "StoreUtilityModule_Action_Privileges" PARAMETERS = "module var" STANDARDOUTPUTLEVEL = "">
+	<MvFUNCTIONRETURN VALUE = -1 />
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "StoreUtilityModule_LeftNavigation" PARAMETERS = "module var, ident" STANDARDOUTPUTLEVEL = "">
 	<MvFUNCTIONRETURN VALUE = 1 />
 </MvFUNCTION>
 
-<MvFUNCTION NAME = "StoreUtilityModule_Screen" PARAMETERS = "module_var" STANDARDOUTPUTLEVEL = "compresswhitespace">
+<MvFUNCTION NAME = "StoreUtilityModule_Screen" PARAMETERS = "module var" STANDARDOUTPUTLEVEL = "">
 	<MvFUNCTIONRETURN VALUE = 1 />
 </MvFUNCTION>
 
-<MvFUNCTION NAME = "StoreUtilityModule_Validate" PARAMETERS = "module_var" STANDARDOUTPUTLEVEL = "compresswhitespace">
+<MvFUNCTION NAME = "StoreUtilityModule_Screen_Privileges" PARAMETERS = "module var" STANDARDOUTPUTLEVEL = "">
+	<MvFUNCTIONRETURN VALUE = -1 />
+</MvFUNCTION>
+
+<MvFUNCTION NAME = "StoreUtilityModule_Validate" PARAMETERS = "module_var" STANDARDOUTPUTLEVEL = "">
 	<MvFUNCTIONRETURN VALUE = 1 />
 </MvFUNCTION>
 
@@ -106,15 +108,15 @@
 	<MvFUNCTIONRETURN VALUE = 1 />
 </MvFUNCTION>
 
-<MvFUNCTION NAME = "Module_Utility_Tabs" PARAMETERS = "module_var" STANDARDOUTPUTLEVEL = "compresswhitespace">
+<MvFUNCTION NAME = "Module_Utility_Tabs" PARAMETERS = "module_var" STANDARDOUTPUTLEVEL = "">
 	<MvFUNCTIONRETURN VALUE = "TRANSIENTS:Transients" />
 </MvFUNCTION>
 
-<MvFUNCTION NAME = "Module_Utility_Update" PARAMETERS = "module_var" STANDARDOUTPUTLEVEL = "compresswhitespace">
+<MvFUNCTION NAME = "Module_Utility_Update" PARAMETERS = "module_var" STANDARDOUTPUTLEVEL = "">
 	<MvFUNCTIONRETURN VALUE = 1 />
 </MvFUNCTION>
 
-<MvFUNCTION NAME = "Module_Utility_Validate" PARAMETERS = "module_var" STANDARDOUTPUTLEVEL = "compresswhitespace">
+<MvFUNCTION NAME = "Module_Utility_Validate" PARAMETERS = "module_var" STANDARDOUTPUTLEVEL = "">
 	<MvFUNCTIONRETURN VALUE = 1 />
 </MvFUNCTION>
 
@@ -390,49 +392,32 @@
 		<MvFUNCTIONRETURN>
 	</MvIF>
 
-	<MvASSIGN NAME = "l.navigationitem_count" VALUE = "{ [ g.Module_Root $ 'modules/component/readytheme.mvc' ].ReadyTheme_NavigationItemList_Load_Heirarchy( l.navigationset:id, l.navigationset:navigationitems ) }">
-
-	<MvIF EXPR = "{ NOT l.navigationitem_count }">
+	<MvIF EXPR = "{ NOT [ g.Module_Root $ 'modules/component/readytheme.mvc' ].readytheme_runtime_navigationitemlist_load_navigationsetid( l.navigationset:id, l.navigationset:navigationitems ) }">
 		<MvFUNCTIONRETURN>
 	</MvIF>
 
-	<MvASSIGN NAME = "l.temp" VALUE = "{ miva_array_filter_ref( l.navigationset:navigationitems, 0, l.nav_item, 'l.nav_item:active EQ 1', l.navigationset_new:navigationitems ) }" />
-
-	<MvASSIGN NAME = "l.navigationset:navigationitems" VALUE = "{ l.navigationset_new:navigationitems }" />
-
 	<MvFOREACH ITERATOR = "l.navigationitem" ARRAY = "l.navigationset:navigationitems">
-		<MvIF EXPR = "{ l.navigationitem:active EQ 0 }">
-			<MvFOREACHCONTINUE />
+		<MvIF EXPR = "{ l.navigationitem:url }">
+			<MvASSIGN NAME = "l.navigationitem:link_url" VALUE = "{ l.navigationitem:url }">
+		<MvELSE>
+			<MvASSIGN NAME = "l.navigationitem" VALUE = "{ Transient_Load_Link( l.navigationitem ) }">
 		</MvIF>
-
-		<MvASSIGN NAME = "l.navigationitem" VALUE = "{ Transient_Load_Link( l.navigationitem ) }">
-		<MvIF EXPR = "{ l.navigationitem:items }">
-			<MvASSIGN NAME = "l.temp" VALUE = "{ miva_array_filter_ref( l.navigationitem:items, 0, l.nav_item2, 'l.nav_item2:active EQ 1', l.navigationitem_new:items ) }" />
-
-			<MvASSIGN NAME = "l.navigationitem:items" VALUE = "{ l.navigationitem_new:items }" />
-
-			<MvFOREACH ITERATOR = "l.navigationitem_level2" ARRAY = "l.navigationitem:items">
-				<MvIF EXPR = "{ l.navigationitem_level2:active EQ 0 }">
-					<MvFOREACHCONTINUE />
-				</MvIF>
-
+		<MvFOREACH ITERATOR = "l.navigationitem_level2" ARRAY = "l.navigationitem:items">
+			<MvIF EXPR = "{ l.navigationitem_level2:url }">
+				<MvASSIGN NAME = "l.navigationitem_level2:link_url" VALUE = "{ l.navigationitem_level2:url }">
+			<MvELSE>
 				<MvASSIGN NAME = "l.navigationitem_level2" VALUE = "{ Transient_Load_Link( l.navigationitem_level2 ) }">
-				<MvIF EXPR = "{ l.navigationitem_level2:items }">
-					<MvASSIGN NAME = "l.temp" VALUE = "{ miva_array_filter_ref( l.navigationitem_level2:items, 0, l.nav_item3, 'l.nav_item3:active EQ 1', l.navigationitem_level2_new:items ) }" />
-
-					<MvASSIGN NAME = "l.navigationitem_level2:items" VALUE = "{ l.navigationitem_level2_new:items }" />
-
-					<MvFOREACH ITERATOR = "l.navigationitem_level3" ARRAY = "l.navigationitem_level2:items">
-						<MvIF EXPR = "{ l.navigationitem_level3:active EQ 0 }">
-							<MvFOREACHCONTINUE>
-						</MvIF>
-
-						<MvASSIGN NAME = "l.navigationitem_level3" VALUE = "{ Transient_Load_Link( l.navigationitem_level3 ) }">
-					</MvFOREACH>
+			</MvIF>
+			<MvFOREACH ITERATOR = "l.navigationitem_level3" ARRAY = "l.navigationitem_level2:items">
+				<MvIF EXPR = "{ l.navigationitem_level3:url }">
+					<MvASSIGN NAME = "l.navigationitem_level3:link_url" VALUE = "{ l.navigationitem_level3:url }">
+				<MvELSE>
+					<MvASSIGN NAME = "l.navigationitem_level3" VALUE = "{ Transient_Load_Link( l.navigationitem_level3 ) }">
 				</MvIF>
 			</MvFOREACH>
-		</MvIF>
+		</MvFOREACH>
 	</MvFOREACH>
+
 	<MvFUNCTIONRETURN VALUE = "{ l.navigationset }" />
 </MvFUNCTION>
 
@@ -673,26 +658,30 @@
 </MvFUNCTION>
 
 <MvFUNCTION NAME = "JSON_API_Delete_Transient" PARAMETERS = "module var" STANDARDOUTPUTLEVEL = "">
-	<MvCOMMENT>
-		--- How do you access the request
-		<MvIF EXPR = "{ Delete_Transient( trim( [[ KEY HERE ]] ) ) }">
-			<MvFUNCTIONRETURN VALUE = "{ [ g.Module_JSON ].JSON_Response_Success() }">
-		</MvIF>
-	</MvCOMMENT>
+	<MvIF EXPR = "{ NOT [ g.Module_JSON ].JSON_Store_Open() }">					<MvFUNCTIONRETURN>																	</MvIF>
+	<MvIF EXPR = "{ NOT [ g.Module_Admin ].CanI( 'SUTL', 0, 0, 0, 1 ) }">		<MvFUNCTIONRETURN VALUE = "{ [ g.Module_JSON ].JSON_Response_Access_Denied() }">	</MvIF>
+
+	<MvIF EXPR = "{ NOT [ g.Module_JSON ].JSON_Input_Code( 'R', 'Code', l.key ) }"><MvFUNCTIONRETURN VALUE = "{ [ g.Module_JSON ].JSON_Response_InputErrors() }"></MvIF>
+
+	<MvIF EXPR = "{ Delete_Transient( trim( l.key ) ) }">
+		<MvFUNCTIONRETURN VALUE = "{ [ g.Module_JSON ].JSON_Response_Success() }">
+	</MvIF>
+
 	<MvFUNCTIONRETURN VALUE = "{ [ g.Module_JSON ].JSON_Response_Error( 'TRANSIENTS-JSON-ERROR-0002', 'Transient not deleted.' ) }">
 </MvFUNCTION>
 
 <MvFUNCTION NAME = "JSON_API_Delete_All_Transients" PARAMETERS = "module var" STANDARDOUTPUTLEVEL = "">
-	<MvIF EXPR = "{ Delete_All_Transients() }">
-		<MvFUNCTIONRETURN VALUE = "{ [ g.Module_JSON ].JSON_Response_Success() }">
-	</MvIF>
+	<MvIF EXPR = "{ NOT [ g.Module_JSON ].JSON_Store_Open() }">					<MvFUNCTIONRETURN>																	</MvIF>
+	<MvIF EXPR = "{ NOT [ g.Module_Admin ].CanI( 'SUTL', 0, 0, 0, 1 ) }">		<MvFUNCTIONRETURN VALUE = "{ [ g.Module_JSON ].JSON_Response_Access_Denied() }">	</MvIF>
+
+	<MvIF EXPR = "{ Delete_All_Transients() }"><MvFUNCTIONRETURN VALUE = "{ [ g.Module_JSON ].JSON_Response_Success() }"></MvIF>
 	<MvFUNCTIONRETURN VALUE = "{ [ g.Module_JSON ].JSON_Response_Error( 'TRANSIENTS-JSON-ERROR-0003', 'Transients not deleted.' ) }">
 </MvFUNCTION>
 
 <MvFUNCTION NAME = "JSON_API_Delete_Expired_Transients" PARAMETERS = "module var" STANDARDOUTPUTLEVEL = "">
-	<MvIF EXPR = "{ Delete_Expired_Transients() }">
-		<MvFUNCTIONRETURN VALUE = "{ [ g.Module_JSON ].JSON_Response_Success() }">
-	</MvIF>
+	<MvIF EXPR = "{ NOT [ g.Module_JSON ].JSON_Store_Open() }">					<MvFUNCTIONRETURN>																	</MvIF>
+	<MvIF EXPR = "{ NOT [ g.Module_Admin ].CanI( 'SUTL', 0, 0, 0, 1 ) }">		<MvFUNCTIONRETURN VALUE = "{ [ g.Module_JSON ].JSON_Response_Access_Denied() }">	</MvIF>
+	<MvIF EXPR = "{ Delete_Expired_Transients() }"><MvFUNCTIONRETURN VALUE = "{ [ g.Module_JSON ].JSON_Response_Success() }"></MvIF>
 	<MvFUNCTIONRETURN VALUE = "{ [ g.Module_JSON ].JSON_Response_Error( 'TRANSIENTS-JSON-ERROR-0004', 'Expired Transients not deleted.' ) }">
 </MvFUNCTION>
 
@@ -727,7 +716,7 @@
 	<MvFUNCTIONRETURN VALUE = "">
 </MvFUNCTION>
 
-<MvFUNCTION NAME = "ScheduledTaskModule_Field" PARAMETERS = "module var, field_id" STANDARDOUTPUTLEVEL = "text, html, compresswhitespace">
+<MvFUNCTION NAME = "ScheduledTaskModule_Field" PARAMETERS = "module var, field_id" STANDARDOUTPUTLEVEL = "">
 </MvFUNCTION>
 
 <MvFUNCTION NAME = "ScheduledTaskModule_Validate" PARAMETERS = "module var, task var" STANDARDOUTPUTLEVEL = "">
@@ -743,14 +732,8 @@
 </MvFUNCTION>
 
 <MvFUNCTION NAME = "ScheduledTaskModule_Execute" PARAMETERS = "module var, task var" STANDARDOUTPUTLEVEL = "">
-	<MvIF EXPR = "{ l.task:operation EQ 'all' }">
-		<MvFUNCTIONRETURN VALUE = "{ Delete_All_Transients() }">
-	</MvIF>
-
-	<MvIF EXPR = "{ l.task:operation EQ 'expired' }">
-		<MvFUNCTIONRETURN VALUE = "{ Delete_Expired_Transients() }">
-	</MvIF>
-
+	<MvIF EXPR = "{ l.task:operation EQ 'all' }"><MvFUNCTIONRETURN VALUE = "{ Delete_All_Transients() }"></MvIF>
+	<MvIF EXPR = "{ l.task:operation EQ 'expired' }"><MvFUNCTIONRETURN VALUE = "{ Delete_Expired_Transients() }"></MvIF>
 	<MvFUNCTIONRETURN VALUE = "{ [ g.Module_Library_Utilities ].Error( 'TRANSIENTS-MOD-3000', 'Unsupported operation' ) }">
 </MvFUNCTION>
 

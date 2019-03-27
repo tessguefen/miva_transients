@@ -2,7 +2,7 @@
 	<MvASSIGN NAME = "l.module:code"		VALUE = "tg_transients">
 	<MvASSIGN NAME = "l.module:name"		VALUE = "Transients">
 	<MvASSIGN NAME = "l.module:provider"	VALUE = "Tess Guefen">
-	<MvASSIGN NAME = "l.module:version"		VALUE = "1.012">
+	<MvASSIGN NAME = "l.module:version"		VALUE = "1.013">
 	<MvASSIGN NAME = "l.module:api_ver"		VALUE = "9.12">
 	<MvASSIGN NAME = "l.module:description"	VALUE = "Save Cached versions of data, set an expiration time, and be happy.">
 	<MvASSIGN NAME = "l.module:features"	VALUE = "util, vis_util, data_store, json, clientside, scheduledtask, provision_store, json_api">
@@ -127,6 +127,10 @@
 </MvCOMMENT>
 
 <MvFUNCTION NAME = "Module_Clientside" PARAMETERS = "module var" STANDARDOUTPUTLEVEL = "text, compresswhitespace">
+	<MvIF EXPR = "{ ( '.js' EIN g.Filename ) EQ len_var( g.Filename ) }">
+		<MvEVAL EXPR = "{ [ g.Module_Clientside ].Module_Content_Type( l.module, 'text/javascript' ) }">
+	</MvIF>
+
 	<MvIF EXPR = "{ g.Filename EQ 'AllTransients_functions.js' }">
 		<MvINCLUDE FILE = "js/AllTransients_functions.js">
 	</MvIF>

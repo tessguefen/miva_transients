@@ -1,6 +1,7 @@
 # Transients
 
-**Current Version 1.012**
+**Current Version 1.014**
+**Version 1.014 required Miva 10+.**
 
 A Transient is a simple way of storing cached data in the database temporarily, by giving it a custom name and a timeframe after which it will expire and be deleted.
 
@@ -81,11 +82,26 @@ This is an example of pulling a Blog's most recent posts, and displaying them on
 # Other Useful Functions with Examples
 
 In Version 1.006 there are 4 new functions:
-- [Transient_ReadyTheme_NavigationSet( readytheme_code, expires )](#Transient_ReadyTheme_NavigationSet)
-- [Transient_Load_NavigationSet( readytheme_code )](#Transient_Load_NavigationSet)
-- [Transient_ReadyTheme_Image( readytheme_code, expires )](#Transient_ReadyTheme_Image)
-- [Transient_Load_Link( item var )](#Transient_Load_Link)
-- [Transient_ReadyTheme_ContentSection( readytheme_code, expires, all_settings var )](#Transient_ReadyTheme_ContentSection)
+- [Transients](#transients)
+	- [Please Note](#please-note)
+	- [Usage](#usage)
+		- [Setting a Transient](#setting-a-transient)
+		- [Getting a Transient](#getting-a-transient)
+- [Example](#example)
+- [Other Useful Functions with Examples](#other-useful-functions-with-examples)
+		- [Transient_ReadyTheme_NavigationSet](#transient_readytheme_navigationset)
+		- [Transient_Load_NavigationSet](#transient_load_navigationset)
+		- [Transient_ReadyTheme_Image](#transient_readytheme_image)
+		- [Transient_Load_Link](#transient_load_link)
+		- [Transient_ReadyTheme_ContentSection](#transient_readytheme_contentsection)
+	- [XML Provisioning](#xml-provisioning)
+		- [Delete a specific Transient](#delete-a-specific-transient)
+		- [Delete All Transients](#delete-all-transients)
+		- [Delete Expired Transients](#delete-expired-transients)
+	- [Miva JSON API](#miva-json-api)
+		- [Delete a specific Transient](#delete-a-specific-transient-1)
+		- [Delete All Transients](#delete-all-transients-1)
+		- [Delete Expired Transients](#delete-expired-transients-1)
 
 <a name="Transient_ReadyTheme_NavigationSet"></a>
 

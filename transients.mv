@@ -2,7 +2,7 @@
 	<MvASSIGN NAME = "l.module:code"		VALUE = "tg_transients">
 	<MvASSIGN NAME = "l.module:name"		VALUE = "Transients">
 	<MvASSIGN NAME = "l.module:provider"	VALUE = "Tess Guefen">
-	<MvASSIGN NAME = "l.module:version"		VALUE = "1.013">
+	<MvASSIGN NAME = "l.module:version"		VALUE = "1.014">
 	<MvASSIGN NAME = "l.module:api_ver"		VALUE = "9.12">
 	<MvASSIGN NAME = "l.module:description"	VALUE = "Save Cached versions of data, set an expiration time, and be happy.">
 	<MvASSIGN NAME = "l.module:features"	VALUE = "util, vis_util, data_store, json, clientside, scheduledtask, provision_store, json_api">
@@ -396,33 +396,61 @@
 		<MvFUNCTIONRETURN>
 	</MvIF>
 
-	<MvIF EXPR = "{ NOT [ g.Module_Root $ 'modules/component/readytheme.mvc' ].readytheme_runtime_navigationitemlist_load_navigationsetid( l.navigationset:id, l.navigationset:navigationitems ) }">
-		<MvFUNCTIONRETURN>
+	<MvIF EXPR = "{ l.navigationset:items EQ '' }">
+		<MvASSIGN NAME = "l.navigationset:items" VALUE = "{ l.navigationset:navigationitems }">
 	</MvIF>
 
-	<MvFOREACH ITERATOR = "l.navigationitem" ARRAY = "l.navigationset:navigationitems">
+	<MvASSIGN NAME = "l.navigationset:navigationitems" VALUE = "">
+
+	<MvFOREACH ITERATOR = "l.navigationitem" ARRAY = "l.navigationset:items">
+		<MvIF EXPR = "{ l.navigationitem:active EQ 0 }">
+			<MvFOREACHCONTINUE>
+		</MvIF>
+
 		<MvIF EXPR = "{ l.navigationitem:url }">
 			<MvASSIGN NAME = "l.navigationitem:link_url" VALUE = "{ l.navigationitem:url }">
 		<MvELSE>
 			<MvASSIGN NAME = "l.navigationitem" VALUE = "{ Transient_Load_Link( l.navigationitem ) }">
 		</MvIF>
+
 		<MvFOREACH ITERATOR = "l.navigationitem_level2" ARRAY = "l.navigationitem:items">
+			<MvIF EXPR = "{ l.navigationitem_level2:active EQ 0 }">
+				<MvFOREACHCONTINUE>
+			</MvIF>
+
 			<MvIF EXPR = "{ l.navigationitem_level2:url }">
 				<MvASSIGN NAME = "l.navigationitem_level2:link_url" VALUE = "{ l.navigationitem_level2:url }">
 			<MvELSE>
 				<MvASSIGN NAME = "l.navigationitem_level2" VALUE = "{ Transient_Load_Link( l.navigationitem_level2 ) }">
 			</MvIF>
+
 			<MvFOREACH ITERATOR = "l.navigationitem_level3" ARRAY = "l.navigationitem_level2:items">
+				<MvIF EXPR = "{ l.navigationitem_level3:active EQ 0 }">
+					<MvFOREACHCONTINUE>
+				</MvIF>
+
 				<MvIF EXPR = "{ l.navigationitem_level3:url }">
 					<MvASSIGN NAME = "l.navigationitem_level3:link_url" VALUE = "{ l.navigationitem_level3:url }">
 				<MvELSE>
 					<MvASSIGN NAME = "l.navigationitem_level3" VALUE = "{ Transient_Load_Link( l.navigationitem_level3 ) }">
 				</MvIF>
+
+				<MvASSIGN NAME = "l.null" VALUE = "{ miva_array_insert_var( l.navigationitem_level2:_items, l.navigationitem_level3, -1 ) }">
 			</MvFOREACH>
+
+			<MvASSIGN NAME = "l.navigationitem_level2:items" VALUE = "{ l.navigationitem_level2:_items }">
+			<MvASSIGN NAME = "l.navigationitem_level2:_items" VALUE = "">
+
+			<MvASSIGN NAME = "l.null" VALUE = "{ miva_array_insert_var( l.navigationitem:_items, l.navigationitem_level2, -1 ) }">
 		</MvFOREACH>
+
+		<MvASSIGN NAME = "l.navigationitem:items" VALUE = "{ l.navigationitem:_items }">
+		<MvASSIGN NAME = "l.navigationitem:_items" VALUE = "">
+
+		<MvASSIGN NAME = "l.null" VALUE = "{ miva_array_insert_var( l.navigationset:navigationitems, l.navigationitem, -1 ) }">
 	</MvFOREACH>
 
-	<MvFUNCTIONRETURN VALUE = "{ l.navigationset }" />
+	<MvFUNCTIONRETURN VALUE = "{ l.navigationset }">
 </MvFUNCTION>
 
 <MvFUNCTION NAME = "Transient_ReadyTheme_Image" PARAMETERS = "readytheme_code, expires" STANDARDOUTPUTLEVEL = "compresswhitespace" ERROROUTPUTLEVEL = "">

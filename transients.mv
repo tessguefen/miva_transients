@@ -435,11 +435,17 @@
 					<MvASSIGN NAME = "l.navigationitem_level3" VALUE = "{ Transient_Load_Link( l.navigationitem_level3 ) }">
 				</MvIF>
 
-				<MvASSIGN NAME = "l.null" VALUE = "{ miva_array_insert_var( l.navigationitem_level2:items, l.navigationitem_level3, -1 ) }">
+				<MvASSIGN NAME = "l.null" VALUE = "{ miva_array_insert_var( l.navigationitem_level2:_items, l.navigationitem_level3, -1 ) }">
 			</MvFOREACH>
 
-			<MvASSIGN NAME = "l.null" VALUE = "{ miva_array_insert_var( l.navigationitem:items, l.navigationitem_level2, -1 ) }">
+			<MvASSIGN NAME = "l.navigationitem_level2:items" VALUE = "{ l.navigationitem_level2:_items }">
+			<MvASSIGN NAME = "l.navigationitem_level2:_items" VALUE = "">
+
+			<MvASSIGN NAME = "l.null" VALUE = "{ miva_array_insert_var( l.navigationitem:_items, l.navigationitem_level2, -1 ) }">
 		</MvFOREACH>
+
+		<MvASSIGN NAME = "l.navigationitem:items" VALUE = "{ l.navigationitem:_items }">
+		<MvASSIGN NAME = "l.navigationitem:_items" VALUE = "">
 
 		<MvASSIGN NAME = "l.null" VALUE = "{ miva_array_insert_var( l.navigationset:navigationitems, l.navigationitem, -1 ) }">
 	</MvFOREACH>

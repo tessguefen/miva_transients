@@ -1,6 +1,6 @@
 # Transients
 
-**Current Version 1.014**
+**Current Version 1.015**
 **Version 1.014 required Miva 10+.**
 
 A Transient is a simple way of storing cached data in the database temporarily, by giving it a custom name and a timeframe after which it will expire and be deleted.

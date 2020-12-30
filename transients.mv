@@ -2,7 +2,7 @@
 	<MvASSIGN NAME = "l.module:code"		VALUE = "tg_transients">
 	<MvASSIGN NAME = "l.module:name"		VALUE = "Transients">
 	<MvASSIGN NAME = "l.module:provider"	VALUE = "Tess Guefen">
-	<MvASSIGN NAME = "l.module:version"		VALUE = "1.014">
+	<MvASSIGN NAME = "l.module:version"		VALUE = "1.015">
 	<MvASSIGN NAME = "l.module:api_ver"		VALUE = "9.12">
 	<MvASSIGN NAME = "l.module:description"	VALUE = "Save Cached versions of data, set an expiration time, and be happy.">
 	<MvASSIGN NAME = "l.module:features"	VALUE = "util, vis_util, data_store, json, clientside, scheduledtask, provision_store, json_api">
@@ -471,7 +471,7 @@
 		<MvFUNCTIONRETURN>
 	</MvIF>
 
-	<MvIF EXPR = "{ NOT [ g.Module_Library_DB ].Image_Load_ID( l.image:image_id, l.loaded_image ) }">
+	<MvIF EXPR = "{ NOT [ g.Module_Library_DB ].Image_Load_File( l.image:image, l.loaded_image ) }">
 		<MvFUNCTIONRETURN>
 	</MvIF>
 
